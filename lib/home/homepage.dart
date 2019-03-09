@@ -3,18 +3,16 @@ import 'package:flutter_miracle_quest/widgets/bank_card.dart';
 import '../game/game.dart';
 import '../progress_button/progress_button.dart';
 
+miracle(MyGame game) {
+  game.ch.click(game.mainCurrencies["Energy"],
+      f: game.mainCurrencies["Followers"]);
+}
 
-
-  miracle(MyGame game) {
-    game.ch.click(game.mainCurrencies["Energy"], f: game.mainCurrencies["Followers"]);
-  } 
-
-  followers(MyGame game) {
-    game.ch.click(game.mainCurrencies["Followers"]);
-  } 
+followers(MyGame game) {
+  game.ch.click(game.mainCurrencies["Followers"]);
+}
 
 class HomePage extends StatefulWidget {
-
   MyGame game;
 
   HomePage(this.game);
@@ -24,7 +22,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
   MyGame game;
 
   HomePageState(this.game);
@@ -54,7 +51,7 @@ class HomePageState extends State<HomePage> {
           itemBuilder: (BuildContext context, int index) {
             if (index == 0) {
               return _userBankCardsWidget();
-            } 
+            }
             // else if (index == 1) {
             //   return _sendMoneySectionWidget();
             // } /* else {
@@ -72,7 +69,17 @@ class HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text('0 per second')),
+              child: Text(
+                'Energy',
+                style: TextStyle(
+                  decorationStyle: TextDecorationStyle.wavy,
+                  fontSize: 20,
+                )
+                )
+                ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              child: Text('${this.game.mainCurrencies["Energy"].passive} per second')),
           Container(
             height: 80.0,
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -81,31 +88,35 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
                 Expanded(
                   child: GestureDetector(
-                    child: ProgressButton(this.game, "Energy")
-                  ),
-                 ),
-
+                      child: ProgressButton(this.game, "Energy")),
+                ),
               ],
             ),
           ),
-           Padding(
+                    Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text('0 per second')
-              ),
-           Container(
-            height: 80.0,
-            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: GestureDetector(
-                    child: ProgressButton(this.game, "Follower")
-                  ),
+              child: Text(
+                'Folllowers',
+                style: TextStyle(
+                  decorationStyle: TextDecorationStyle.wavy,
+                  fontSize: 20,
                 )
-              ]
-            )
-           )
+                )
+                ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              child: Text('${this.game.mainCurrencies["Followers"].passive - this.game.mainCurrencies["Energy"].passive} per second')),
+          Container(
+              height: 80.0,
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: GestureDetector(
+                          child: ProgressButton(this.game, "Follower")),
+                    )
+                  ]))
         ],
       ),
     );

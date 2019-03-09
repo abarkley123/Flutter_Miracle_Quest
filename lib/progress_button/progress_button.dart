@@ -89,8 +89,10 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
     });
 
     Timer(Duration(milliseconds: 4500), () {
-      this.type.startsWith("E") ? miracle(this.game) :followers(this.game);
-      reset();
+      this.type.startsWith("E") ? miracle(this.game) : followers(this.game);
+      setState(() {
+        _state = 0;
+      });
     });
   }
 
@@ -125,8 +127,8 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
   void reset() {
     _width = double.infinity;
     _animatingReveal = false;
-    setState(() {
+    //setState(() {
       _state = 0;
-    });
+    //});
   }
 }

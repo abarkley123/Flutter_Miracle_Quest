@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_miracle_quest/history/history_page.dart';
+import 'purchase/purchase_page.dart';
 import 'home/homepage.dart';
-import 'package:flutter_miracle_quest/profile/profile_page.dart';
+import 'purchase/followers_page.dart';
 import 'package:flutter_miracle_quest/settings/settings_page.dart';
 import 'game/game.dart';
 import 'package:flame/flame.dart';
 import 'navigation/navigation_drawer.dart';
 import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'util/util.dart';
 
 void main() async {
-  MyGame game = new MyGame();
+  final prefs = await SharedPreferences.getInstance();
+  MyGame game = new MyGame(prefs);
   MyHomePage home = new MyHomePage(game);
   MyApp myApp = new MyApp(game, home);
   Flame.util.initialDimensions();
   Flame.audio.disableLog();
   game.widget = myApp;
+
+  double cycles = 0;
   Timer.periodic(new Duration(seconds: 1), (timer) {
-    game.update(0);
+    game.update(cycles++);
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
     home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
+    if (cycles % 2 == 0) game.saveData();
   });
 
   runApp(game.widget);
@@ -144,12 +150,12 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         return Container(
-          child: HistoryPage(),
+          child: PurchasePage(this._game)
         );
         break;
       case 2:
         return Container(
-          child: ProfilePage(),
+          child: FollowerPurchasePage(this._game)
         );
         break;
       default:
@@ -193,7 +199,7 @@ class _MyTextWidgetState extends State<MyTextWidget> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      amountToDisplay.toString(),
+      truncateBigValue(amountToDisplay),
       style: TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w700),
     );
   }

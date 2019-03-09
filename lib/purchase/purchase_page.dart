@@ -19,10 +19,10 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   List<PurchaseModel> purchases = [
-    PurchaseModel(999.0, 0, 1, "Newspaper ", "1"),
-    PurchaseModel(830.0, 0, 5, "Intern", "2"),
-    PurchaseModel(830.0, 0, 20, "Shrine", "3"),
-    PurchaseModel(30.0, 0, 100, "Temple", "4"),
+    PurchaseModel(1, 0, 1, "Newspaper ", "1"),
+    PurchaseModel(10, 0, 5, "Intern", "2"),
+    PurchaseModel(50, 0, 20, "Shrine", "3"),
+    PurchaseModel(500, 0, 100, "Temple", "4"),
   ];
 
   void setPurchaseValues() {

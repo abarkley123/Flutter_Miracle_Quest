@@ -19,10 +19,10 @@ class FollowerPurchasePageState extends State<FollowerPurchasePage> {
   }
 
   List<PurchaseModel> purchases = [
-    PurchaseModel(999.0, 0, 1, "Articles ", "1"),
-    PurchaseModel(830.0, 0, 5, "Loudspeaker", "2"),
-    PurchaseModel(830.0, 0, 20, "Apostles", "3"),
-    PurchaseModel(30.0, 0, 100, "Communion", "4"),
+    PurchaseModel(1, 0, 1, "Articles ", "1"),
+    PurchaseModel(4, 0, 5, "Loudspeaker", "2"),
+    PurchaseModel(40, 0, 20, "Apostles", "3"),
+    PurchaseModel(350, 0, 100, "Communion", "4"),
   ];
 
   void setPurchaseValues() {

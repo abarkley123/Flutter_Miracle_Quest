@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_miracle_quest/send_money_flow/select_account_page.dart';
 import 'package:flutter_miracle_quest/widgets/bank_card.dart';
 import '../game/game.dart';
+import '../progress_button/progress_button.dart';
+
+
+
+  miracle(MyGame game) {
+    game.ch.click(game.mainCurrencies["Energy"], f: game.mainCurrencies["Followers"]);
+  } 
+
+  followers(MyGame game) {
+    game.ch.click(game.mainCurrencies["Followers"]);
+  } 
 
 class HomePage extends StatefulWidget {
 
@@ -54,15 +64,6 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  _miracle() {
-    this.game.ch.click(this.game.mainCurrencies["Energy"], f: this.game.mainCurrencies["Followers"]);
-  } 
-
-  _followers() {
-    print(this.game.mainCurrencies["Followers"]);
-    this.game.ch.click(this.game.mainCurrencies["Followers"]);
-  } 
-
   Widget _userBankCardsWidget() {
     return Container(
       margin: EdgeInsets.only(top: 20.0),
@@ -80,13 +81,7 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
                 Expanded(
                   child: GestureDetector(
-                    onTap: 
-                      _miracle
-                    ,
-                    child: RaisedButton(
-                      child: Text("Get Energy"),
-                      onPressed: _miracle,
-                    )
+                    child: ProgressButton(this.game, "Energy")
                   ),
                  ),
 
@@ -97,17 +92,6 @@ class HomePageState extends State<HomePage> {
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
               child: Text('0 per second')
               ),
-          // Container(
-          //   margin: EdgeInsets.symmetric(horizontal: 8.0),
-          //   height: 166.0,
-          //   child: ListView.builder(
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: 4,
-          //     itemBuilder: (BuildContext context, int index) {
-          //       return _getBankCard(index);
-          //     },
-          //   ),
-          // ),
            Container(
             height: 80.0,
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -116,13 +100,8 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
                 Expanded(
                   child: GestureDetector(
-                    onTap: 
-                      _followers,
-                    child: RaisedButton(
-                      child: Text("Get Followers"),
-                      onPressed: _followers,
-                    )
-                  )
+                    child: ProgressButton(this.game, "Follower")
+                  ),
                 )
               ]
             )

@@ -23,7 +23,8 @@ void main() async {
   Timer.periodic(new Duration(seconds: 1), (timer) {
     game.update(cycles++);
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
-    home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
+    home.hps.followers.state
+        ._updateSeconds(game.mainCurrencies["Followers"].amount);
     if (cycles % 2 == 0) game.saveData();
   });
 
@@ -92,7 +93,57 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: new Drawer(),
+      drawer: Drawer(
+          child: new Container(
+        constraints: new BoxConstraints.expand(
+          width: MediaQuery.of(context).size.width - 20,
+        ),
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: new ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            new DrawerHeader(
+                padding: const EdgeInsets.all(16.0),
+                child: new UserAccountsDrawerHeader(
+                  accountName: new Text(
+                    'Miracle Quest',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  accountEmail: new Text(
+                    'Navigation Menu',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  currentAccountPicture: FlutterLogo(),
+                  decoration: new BoxDecoration(
+                    color: Colors.blue[50],
+                  ),
+                ),
+                decoration: new BoxDecoration(color: Colors.blue[50])),
+            new ListTile(
+                leading: new Icon(Icons.info),
+                title: new Text("Settings"),
+                onTap: () {
+                  _curIndex = 4;
+                  setState(() {});
+                }),
+            new ListTile(
+                leading: new Icon(Icons.info),
+                title: new Text("Online Store"),
+                onTap: () {}),
+            new ListTile(
+                leading: new Icon(Icons.info),
+                title: new Text("Tutorial"),
+                onTap: () {}),
+            new ListTile(
+                leading: new Icon(Icons.close),
+                title: new Text("Close"),
+                onTap: () {
+                  Navigator.pop(context);
+                }),
+          ],
+        ),
+      )),
       appBar: this._myAppBar,
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _curIndex,
@@ -149,14 +200,13 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         break;
       case 1:
-        return Container(
-          child: PurchasePage(this._game)
-        );
+        return Container(child: PurchasePage(this._game));
         break;
       case 2:
-        return Container(
-          child: FollowerPurchasePage(this._game)
-        );
+        return Container(child: FollowerPurchasePage(this._game));
+        break;
+      case 4:
+        return Container(child: SettingsPage());
         break;
       default:
         return Container(

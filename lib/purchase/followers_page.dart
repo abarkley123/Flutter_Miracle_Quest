@@ -66,20 +66,27 @@ class FollowerPurchasePageState extends State<FollowerPurchasePage> {
   }
 
   _followerPurchase(MyGame game, PurchaseModel purchase) {
-    setState(() {
-      purchase.amount++;
-    });
-    game.ch.purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
-    game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount, purchases[2].amount, purchases[3].amount);
+    if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
+      setState(() {
+        purchase.amount++;
+      });
+      game.ch
+          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
+      game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
+          purchases[2].amount, purchases[3].amount);
+    }
   }
 
-
   _followerSell(MyGame game, PurchaseModel purchase) {
-    setState(() {
-      purchase.amount--;
-    });
-    game.ch.purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
-    game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount, purchases[2].amount, purchases[3].amount);
+    if (purchase.amount >= 1) {
+      setState(() {
+        purchase.amount--;
+      });
+      game.ch
+          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
+      game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
+          purchases[2].amount, purchases[3].amount);
+    }
   }
 
   Widget _purchaseWidget(PurchaseModel purchase) {
@@ -94,13 +101,21 @@ class FollowerPurchasePageState extends State<FollowerPurchasePage> {
                 Padding(
                     padding: const EdgeInsets.only(right: 16.0, top: 8.0),
                     child: RaisedButton(
-                      child: Text("Buy"),
+                           child: Row(children: <Widget>[
+                        Text("Buy "),
+                        Text("[${purchase.cost.ceil()}]",
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ]),
                       onPressed: () => _followerPurchase(this.game, purchase),
                     )),
                 Padding(
                     padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
                     child: RaisedButton(
-                      child: Text("Sell"),
+                          child: Row(children: <Widget>[
+                        Text("Sell "),
+                        Text("[${purchase.cost.ceil()}]",
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ]),
                       onPressed: () => _followerSell(this.game, purchase),
                     )),
               ]),

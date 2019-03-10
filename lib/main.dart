@@ -9,6 +9,7 @@ import 'navigation/navigation_drawer.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'util/util.dart';
+import 'store/store.dart';
 
 void main() async {
   final prefs = await SharedPreferences.getInstance();
@@ -219,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return Container(child: PurchasePage(this._game));
         break;
       case 2:
-        return Container(child: FollowerPurchasePage(this._game));
+        return Container(child: StorePage(this._game));
         break;
       case 3:
         return Container(child: SettingsPage(this._game));

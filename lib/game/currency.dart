@@ -97,7 +97,7 @@ class Energy extends MainCurrency {
   }
 
   void addMinimumAmount(MainCurrency f) {
-      this._amount += f.amount;
+      this._amount += (f._passiveIncrementable * f._modifier) - (this._passiveIncrementable * this._modifier);
       f._amount = 0;       
   }
 }
@@ -111,12 +111,16 @@ class Followers extends MainCurrency {
 
   @override
   incrementPassive({MainCurrency f}) {
-    this.amount += (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier);
+    if (this.amount + (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier) <= 0
+      || (this.amount <= 0 && (this._passiveIncrementable * this._modifier - (f._passiveIncrementable * f._modifier)) <= (f._passiveIncrementable * f._modifier))) {
+      this.amount = 0;
+    } else {
+      this.amount += (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier);
+    }
   }
 
   @override
   incrementActive({MainCurrency f}) {
-    print('incrementing');
     this._amount += this._incrementable * this._modifier;
   }
 

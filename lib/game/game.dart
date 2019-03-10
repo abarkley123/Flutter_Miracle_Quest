@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'currency.dart';
-import 'dart:async';
 import '../main.dart';
 
 class MyGame extends BaseGame {
@@ -66,6 +64,11 @@ class MyGame extends BaseGame {
     f.amount = prefs.getDouble("Followers") ?? 0;
     e.passive = prefs.getDouble("EnergyPassive") ?? 0;
     f.passive = prefs.getDouble("FollowersPassive") ?? 0;
+  }
+
+  deleteSave() async {
+    await prefs.clear();
+    _mainCurrencies.forEach((key, value) => value.reset());
   }
 }
 

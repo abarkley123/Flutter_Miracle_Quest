@@ -21,6 +21,10 @@ abstract class Currency implements Mutation {
   get activeIncrement {
     return this._incrementable;
   }
+
+  get incrementable {
+    return this._incrementable;
+  }
 }
 
 abstract class MainCurrency extends Currency {
@@ -51,6 +55,13 @@ abstract class MainCurrency extends Currency {
   set passive(double amount) {
     this._passiveIncrementable = amount;
   }
+
+  void reset() {
+    this.amount = 0;
+    this._passiveIncrementable = 0;
+    this._incrementable = 1;
+    this._modifier = 1;
+  }
 }
 
 class Energy extends MainCurrency {
@@ -62,8 +73,12 @@ class Energy extends MainCurrency {
 
   @override
   incrementPassive({MainCurrency f}) {
-    this._amount += (this.passive * this._modifier);
-    f._amount -= (this.passive * this._modifier);
+    if (this.passive <= f.amount) {
+      this._amount += (this.passive * this._modifier);
+      f._amount -= (this.passive * this._modifier);
+    } else {
+      addMinimumAmount(f);
+    }
   }
 
   @override
@@ -73,8 +88,17 @@ class Energy extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f}) {
-    this._amount += this._incrementable * this._modifier;
-    f._amount -= (this._incrementable * this._modifier);
+    if (this._incrementable <= f.amount) {
+      this._amount += this._incrementable * this._modifier;
+      f._amount -= (this._incrementable * this._modifier);
+    } else {
+      addMinimumAmount(f);    
+    }
+  }
+
+  void addMinimumAmount(MainCurrency f) {
+      this._amount += f.amount;
+      f._amount = 0;       
   }
 }
 
@@ -108,9 +132,7 @@ class CurrencyHandler {
   }
 
   void click(MainCurrency c, {MainCurrency f}) {
-    print(c.amount.toString() + ' ' + c.toString());
     c.incrementActive(f: f ?? c);
-    print(c.amount.toString());
   }
 
   void purchasePassive(MainCurrency c, double amount, {MainCurrency f}) {

@@ -50,7 +50,8 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
           width: _width,
           child: RaisedButton(
             padding: EdgeInsets.all(0.0),
-            color: _state == 2 ? Colors.green : Colors.blue,
+            color: _state == 2 ? (this.type.startsWith("E") && this.game.mainCurrencies["Followers"].amount <= 0 ? Colors.red : Colors.green
+            ) : Colors.blue,
             child: buildButtonChild(),
             onPressed: () {},
             onHighlightChanged: (isPressed) {
@@ -89,7 +90,8 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
     });
 
     Timer(Duration(milliseconds: 4500), () {
-      this.type.startsWith("E") ? miracle(this.game) : followers(this.game);
+      if (this.game.mainCurrencies["Followers"].amount >= 0) 
+        this.type.startsWith("E") ? miracle(this.game) : followers(this.game);
       setState(() {
         _state = 0;
       });
@@ -99,7 +101,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
   Widget buildButtonChild() {
     if (_state == 0) {
       return Text(
-        'Generate',
+        'Generate ' + this.type,
         style: TextStyle(color: Colors.white, fontSize: 16.0),
       );
     } else if (_state == 1) {
@@ -112,7 +114,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
         ),
       );
     } else {
-      return Icon(Icons.check, color: Colors.white);
+      return Icon(this.type.startsWith("E") && this.game.mainCurrencies["Followers"].amount <= 0 ? Icons.clear: Icons.check, color: Colors.white);
     }
   }
 

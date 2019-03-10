@@ -23,8 +23,7 @@ void main() async {
   Timer.periodic(new Duration(seconds: 1), (timer) {
     game.update(cycles++);
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
-    home.hps.followers.state
-        ._updateSeconds(game.mainCurrencies["Followers"].amount);
+    home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
     if (cycles % 2 == 0) game.saveData();
   });
 
@@ -120,21 +119,38 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 decoration: new BoxDecoration(color: Colors.blue[50])),
-            new ListTile(
+             new ListTile(
                 leading: new Icon(Icons.info),
-                title: new Text("Settings"),
+                title: new Text("Home"),
                 onTap: () {
-                  _curIndex = 4;
+                  Navigator.pop(context);
+                  _curIndex = 0;
                   setState(() {});
                 }),
             new ListTile(
                 leading: new Icon(Icons.info),
-                title: new Text("Online Store"),
-                onTap: () {}),
+                title: new Text("Purchases"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _curIndex = 1;
+                  setState(() {});
+                }),
             new ListTile(
                 leading: new Icon(Icons.info),
-                title: new Text("Tutorial"),
-                onTap: () {}),
+                title: new Text("Upgrades"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _curIndex = 2;
+                  setState(() {});
+                }),
+            new ListTile(
+                leading: new Icon(Icons.info),
+                title: new Text("Settings"),
+                onTap: () {
+                  Navigator.pop(context);
+                  _curIndex = 3;
+                  setState(() {});
+                }),
             new ListTile(
                 leading: new Icon(Icons.close),
                 title: new Text("Close"),
@@ -164,23 +180,23 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.offline_bolt,
                   color: _curIndex == 1 ? Colors.black : Colors.grey),
               title: Text(
-                'Energy',
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.monetization_on,
-                  color: _curIndex == 2 ? Colors.black : Colors.grey),
-              title: Text(
-                'Followers',
+                'Production',
                 style: TextStyle(color: Colors.black),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.store,
-                  color: _curIndex == 3 ? Colors.black : Colors.grey),
+                  color: _curIndex == 2 ? Colors.black : Colors.grey),
               title: Text(
                 'Store',
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings,
+                  color: _curIndex == 3 ? Colors.black : Colors.grey),
+              title: Text(
+                'Settings',
                 style: TextStyle(color: Colors.black),
               ),
             ),
@@ -205,12 +221,12 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2:
         return Container(child: FollowerPurchasePage(this._game));
         break;
-      case 4:
-        return Container(child: SettingsPage());
+      case 3:
+        return Container(child: SettingsPage(this._game));
         break;
       default:
         return Container(
-          child: SettingsPage(),
+          child: SettingsPage(this._game),
         );
         break;
     }
@@ -218,6 +234,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MyTextWidget extends StatefulWidget {
+
   _MyTextWidgetState state;
 
   MyTextWidget() {

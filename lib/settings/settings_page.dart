@@ -1,14 +1,28 @@
 import 'package:flutter/material.dart';
+import '../game/game.dart';
 
 class SettingsPage extends StatefulWidget {
+
+  final MyGame game;
+
+  SettingsPage(this.game);
+
   @override
-  SettingsPageState createState() => SettingsPageState();
+  SettingsPageState createState() => SettingsPageState(this.game);
 }
 
 class SettingsPageState extends State<SettingsPage> {
+
+  final MyGame game;
+
+  SettingsPageState(this.game);
+
+  _deletePrefs(MyGame game) {
+    game.deleteSave();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       backgroundColor:  Color(0xFFF4F4F4),
       body: Container(
@@ -198,6 +212,7 @@ class SettingsPageState extends State<SettingsPage> {
                                             )),
                                       ),
                                       GestureDetector(
+                                        onTap: () => _deletePrefs(this.game),
                                         child: Container(
                                           width: 135.0,
                                           decoration: BoxDecoration(
@@ -206,11 +221,11 @@ class SettingsPageState extends State<SettingsPage> {
                                           ),
                                           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                           child: Text(
-                                            'SHARE',
+                                            'DELETE',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
-                                              fontSize: 20.0
+                                              fontSize: 18.0
                                             ),
                                             textAlign: TextAlign.center,
                                           ),

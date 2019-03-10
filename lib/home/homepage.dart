@@ -4,8 +4,11 @@ import '../game/game.dart';
 import '../progress_button/progress_button.dart';
 
 miracle(MyGame game) {
-  game.ch.click(game.mainCurrencies["Energy"],
-      f: game.mainCurrencies["Followers"]);
+  if (game.mainCurrencies["Followers"].amount <= 0.0) {
+
+  } else {
+    game.ch.click(game.mainCurrencies["Energy"], f: game.mainCurrencies["Followers"]);
+  }
 }
 
 followers(MyGame game) {
@@ -69,17 +72,15 @@ class HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text(
-                'Energy',
-                style: TextStyle(
-                  decorationStyle: TextDecorationStyle.wavy,
-                  fontSize: 20,
-                )
-                )
-                ),
+              child: Text('Energy',
+                  style: TextStyle(
+                    decorationStyle: TextDecorationStyle.wavy,
+                    fontSize: 20,
+                  ))),
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text('${this.game.mainCurrencies["Energy"].passive} per second')),
+              child: Text(
+                  '${this.game.mainCurrencies["Energy"].passive} per second')),
           Container(
             height: 80.0,
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -93,19 +94,17 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-                    Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text(
-                'Folllowers',
-                style: TextStyle(
-                  decorationStyle: TextDecorationStyle.wavy,
-                  fontSize: 20,
-                )
-                )
-                ),
           Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-              child: Text('${this.game.mainCurrencies["Followers"].passive - this.game.mainCurrencies["Energy"].passive} per second')),
+              child: Text('Followers',
+                  style: TextStyle(
+                    decorationStyle: TextDecorationStyle.wavy,
+                    fontSize: 20,
+                  ))),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              child: Text(
+                  '${this.game.mainCurrencies["Followers"].passive - this.game.mainCurrencies["Energy"].passive} per second')),
           Container(
               height: 80.0,
               margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -114,7 +113,7 @@ class HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Expanded(
                       child: GestureDetector(
-                          child: ProgressButton(this.game, "Follower")),
+                          child: ProgressButton(this.game, "Followers")),
                     )
                   ]))
         ],

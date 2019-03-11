@@ -143,8 +143,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {});
                 }),
             new ListTile(
-                leading: new Icon(Icons.store),
-                title: new Text("Upgrades"),
+                leading: new Icon(Icons.account_balance),
+                title: new Text("Advanced"),
                 onTap: () {
                   Navigator.pop(context);
                   _curIndex = 2;

@@ -18,10 +18,11 @@ class StorePageState extends State<StorePage> {
     // setPurchaseValues();
   }
 
+
+//we may keep Perks here - VIP store shall be its own page. Perhaps pantheon -sacrifice -perks? something equiv
 static const List<Category> categories = <Category>[
-    Category(name: 'Upgrades', icon: Icons.assessment),
-    Category(name: 'Perks', icon: Icons.code),
-    Category(name: 'VIP Store', icon: Icons.people),
+    Category(name: 'Battlefield', icon: Icons.assessment),
+    Category(name: 'Armory', icon: Icons.code),
   ];
 
 // Our MrTabs class.

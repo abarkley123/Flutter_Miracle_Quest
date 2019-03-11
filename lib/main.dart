@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'purchase/purchase_page.dart';
 import 'home/homepage.dart';
-import 'purchase/followers_page.dart';
 import 'package:flutter_miracle_quest/settings/settings_page.dart';
 import 'game/game.dart';
 import 'package:flame/flame.dart';
@@ -25,6 +24,7 @@ void main() async {
     game.update(cycles++);
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
     home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
+
     if (cycles % 2 == 0) game.saveData();
   });
 
@@ -106,13 +106,19 @@ class _MyHomePageState extends State<MyHomePage> {
             new DrawerHeader(
                 padding: const EdgeInsets.all(16.0),
                 child: new UserAccountsDrawerHeader(
-                  accountName: new Text(
-                    'Miracle Quest',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  accountEmail: new Text(
-                    'Navigation Menu',
-                    style: TextStyle(color: Colors.black),
+                  // accountName: new Column(
+                  //   crossAxisAlignment:CrossAxisAlignment.center,
+                  //   mainAxisAlignment: MainAxisAlignment.start,
+                  //   children: <Widget> [Text('Miracle Quest',
+                  //   style: TextStyle(color: Colors.black, fontSize: 20.0),
+                  //   )],
+                  // ),
+                   accountEmail: new Column(
+                    crossAxisAlignment:CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget> [Text('Miracle Quest',
+                    style: TextStyle(color: Colors.black, fontSize: 20.0),
+                    )],
                   ),
                   currentAccountPicture: FlutterLogo(),
                   decoration: new BoxDecoration(
@@ -121,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 decoration: new BoxDecoration(color: Colors.blue[50])),
              new ListTile(
-                leading: new Icon(Icons.info),
+                leading: new Icon(Icons.home),
                 title: new Text("Home"),
                 onTap: () {
                   Navigator.pop(context);
@@ -129,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {});
                 }),
             new ListTile(
-                leading: new Icon(Icons.info),
+                leading: new Icon(Icons.offline_bolt),
                 title: new Text("Purchases"),
                 onTap: () {
                   Navigator.pop(context);
@@ -137,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {});
                 }),
             new ListTile(
-                leading: new Icon(Icons.info),
+                leading: new Icon(Icons.store),
                 title: new Text("Upgrades"),
                 onTap: () {
                   Navigator.pop(context);
@@ -145,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {});
                 }),
             new ListTile(
-                leading: new Icon(Icons.info),
+                leading: new Icon(Icons.settings),
                 title: new Text("Settings"),
                 onTap: () {
                   Navigator.pop(context);

@@ -11,6 +11,18 @@ miracle(MyGame game) {
   }
 }
 
+class Category {
+  const Category({this.name, this.icon, this.index});
+  final String name;
+  final IconData icon;
+  final int index;
+}
+
+const List<Category> categories = <Category>[
+  Category(name: 'Generate', icon: Icons.battery_charging_full, index: 1),
+  Category(name: 'Augment', icon: Icons.stars, index: 2),
+];
+
 followers(MyGame game) {
   game.ch.click(game.mainCurrencies["Followers"]);
 }
@@ -45,24 +57,59 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
-    // TODO: implement build
-    return Scaffold(
-      backgroundColor: Color(0xFFF4F4F4),
-      body: ListView.builder(
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return _userBankCardsWidget();
-            }
-            // else if (index == 1) {
-            //   return _sendMoneySectionWidget();
-            // } /* else {
-            //   return _utilitesSectionWidget();
-            //  } */
-          }),
-    );
+    return new MaterialApp(
+        home: new DefaultTabController(
+      length: categories.length,
+      child: new Scaffold(
+        appBar: new PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: new TabBar(
+            tabs: categories.map((Category choice) {
+              return new Tab(
+                child: Text(
+                  choice.name,
+                  style: TextStyle(color: Colors.black),
+                ),
+                icon: new Icon(
+                  choice.icon,
+                  color: Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        body: new TabBarView(
+          children: categories.map((Category choice) {
+            return new Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: _userBankCardsWidget(),
+            );
+          }).toList(),
+        ),
+      ),
+    ));
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   screenWidth = MediaQuery.of(context).size.width;
+  //   // TODO: implement build
+  //   return Scaffold(
+  //     backgroundColor: Color(0xFFF4F4F4),
+  //     body: ListView.builder(
+  //         itemCount: 3,
+  //         itemBuilder: (BuildContext context, int index) {
+  //           if (index == 0) {
+  //             return _userBankCardsWidget();
+  //           }
+  //           // else if (index == 1) {
+  //           //   return _sendMoneySectionWidget();
+  //           // } /* else {
+  //           //   return _utilitesSectionWidget();
+  //           //  } */
+  //         }),
+  //   );
+  // }
 
   Widget _userBankCardsWidget() {
     return Container(
@@ -75,6 +122,7 @@ class HomePageState extends State<HomePage> {
               child: Text('Energy',
                   style: TextStyle(
                     decorationStyle: TextDecorationStyle.wavy,
+                    fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ))),
           Padding(
@@ -99,12 +147,20 @@ class HomePageState extends State<HomePage> {
               child: Text('Followers',
                   style: TextStyle(
                     decorationStyle: TextDecorationStyle.wavy,
+                    fontWeight: FontWeight.bold,
                     fontSize: 20,
                   ))),
+          Column(children: <Widget>[
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
               child: Text(
-                  '${this.game.mainCurrencies["Followers"].passive - this.game.mainCurrencies["Energy"].passive} per second')),
+                  'Net: ${(this.game.mainCurrencies["Followers"].passive * this.game.mainCurrencies["Followers"].modifier) - (this.game.mainCurrencies["Energy"].passive * this.game.mainCurrencies["Energy"].modifier)} per second')),
+            
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
+              child: Text(
+                  'Gross: ${this.game.mainCurrencies["Followers"].passive * this.game.mainCurrencies["Followers"].modifier} per second')),
+          ],),
           Container(
               height: 80.0,
               margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),

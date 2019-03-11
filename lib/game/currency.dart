@@ -44,6 +44,10 @@ abstract class MainCurrency extends Currency {
 
   void increasePassiveIncrement(double amount);
 
+  get modifier {
+    return this._modifier;
+  }
+
   get passive {
     return this._passiveIncrementable;
   }
@@ -54,6 +58,10 @@ abstract class MainCurrency extends Currency {
 
   set passive(double amount) {
     this._passiveIncrementable = amount;
+  }
+
+  void adjustForNegatives() {
+    if (this.amount <= 0) this.amount = 0;
   }
 
   void reset() {
@@ -79,6 +87,8 @@ class Energy extends MainCurrency {
     } else {
       addMinimumAmount(f);
     }
+
+    adjustForNegatives();
   }
 
   @override
@@ -88,17 +98,23 @@ class Energy extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f}) {
-    if (this._incrementable <= f.amount) {
+    if (f.amount > ((this._incrementable * this._modifier) - (f.incrementable * f._modifier))) {
       this._amount += this._incrementable * this._modifier;
       f._amount -= (this._incrementable * this._modifier);
     } else {
       addMinimumAmount(f);    
     }
+
+    adjustForNegatives();
   }
 
   void addMinimumAmount(MainCurrency f) {
-      this._amount += (f._passiveIncrementable * f._modifier) - (this._passiveIncrementable * this._modifier);
-      f._amount = 0;       
+    if (f._passiveIncrementable * f._modifier >= (this._passiveIncrementable * this._modifier)) {
+      this.amount += this._passiveIncrementable * this._modifier;
+    } else {
+      this.amount += f._passiveIncrementable * f._modifier;
+    }
+    f._amount = 0;       
   }
 }
 
@@ -117,11 +133,15 @@ class Followers extends MainCurrency {
     } else {
       this.amount += (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier);
     }
+
+    adjustForNegatives();
   }
 
   @override
   incrementActive({MainCurrency f}) {
     this._amount += this._incrementable * this._modifier;
+
+    adjustForNegatives();
   }
 
   @override

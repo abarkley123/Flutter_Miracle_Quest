@@ -132,12 +132,12 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  Widget _followerWidget(FollowerModel purchase) {
+  Widget _followerUpgradeWidget(FollowerModel purchase) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: <Widget>[
               Column(children: <Widget>[
@@ -157,7 +157,7 @@ class PurchasePageState extends State<PurchasePage> {
               Expanded(
                 child: Column(children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, top: 16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -185,12 +185,11 @@ class PurchasePageState extends State<PurchasePage> {
                   ),
                 ]),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Column(
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top:16.0),
+                child:Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Row(children: <Widget>[
                         Text(
@@ -201,7 +200,6 @@ class PurchasePageState extends State<PurchasePage> {
                       ]),
                     ],
                   ),
-                ),
               ),
             ],
           ),
@@ -210,12 +208,12 @@ class PurchasePageState extends State<PurchasePage> {
     );
   }
 
-Widget _followerUpgradeWidget(FollowerModel purchase) {
+Widget _followerWidget(FollowerModel purchase) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: <Widget>[
               Column(children: <Widget>[
@@ -247,7 +245,7 @@ Widget _followerUpgradeWidget(FollowerModel purchase) {
               Expanded(
                 child: Column(children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8.0, top: 16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -275,12 +273,11 @@ Widget _followerUpgradeWidget(FollowerModel purchase) {
                   ),
                 ]),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Column(
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, top:16.0),
+                child:Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Row(children: <Widget>[
                         Text(
@@ -291,13 +288,14 @@ Widget _followerUpgradeWidget(FollowerModel purchase) {
                       ]),
                     ],
                   ),
-                ),
               ),
+           
             ],
+              )
           ),
         ),
-      ),
-    );
+      );
+
   }
 
   _energyPurchase(MyGame game, PurchaseModel purchase) {
@@ -329,7 +327,7 @@ Widget _followerUpgradeWidget(FollowerModel purchase) {
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Row(
             children: <Widget>[
               Column(children: <Widget>[

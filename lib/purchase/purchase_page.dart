@@ -12,6 +12,13 @@ class PurchasePage extends StatefulWidget {
   PurchasePageState createState() => PurchasePageState(game);
 }
 
+List<CurrencyModel> purchases = [
+  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
+  CurrencyModel(10, 0, 5, "Intern", "2"),
+  CurrencyModel(50, 0, 20, "Shrine", "3"),
+  CurrencyModel(500, 0, 100, "Temple", "4"),
+];
+
 class PurchasePageState extends State<PurchasePage> {
   double width;
   final MyGame game;
@@ -19,13 +26,6 @@ class PurchasePageState extends State<PurchasePage> {
   PurchasePageState(this.game) {
     setPurchaseValues();
   }
-
-  List<PurchaseModel> purchases = [
-    PurchaseModel(1, 0, 1, "Newspaper ", "1"),
-    PurchaseModel(10, 0, 5, "Intern", "2"),
-    PurchaseModel(50, 0, 20, "Shrine", "3"),
-    PurchaseModel(500, 0, 100, "Temple", "4"),
-  ];
 
   void setPurchaseValues() {
     purchases[0].amount = game.prefs.getInt("Energy0Amount") ?? 0;
@@ -94,9 +94,12 @@ class PurchasePageState extends State<PurchasePage> {
                     height: MediaQuery.of(context).size.height / 4,
                     child: Swiper(
                       itemBuilder: (BuildContext context, int ind) {
-                        return ind == 0 ? (choice.index == 1
-                            ? _purchaseWidget(purchases[index])
-                            : _followerWidget(followers[index])) : _followerUpgradeWidget(followers[index]);
+                        return _currencyWidget(
+                            ind,
+                            choice.index,
+                            choice.index == 1
+                            ? purchases[index]
+                            : followers[index]);
                       },
                       itemCount: 2,
                       viewportFraction: 1,
@@ -108,7 +111,111 @@ class PurchasePageState extends State<PurchasePage> {
     );
   }
 
-  _followerPurchase(MyGame game, FollowerModel purchase) {
+  Widget _currencyWidget(int ind, int index, CurrencyModel currency) {
+    return ind == 0
+        ? _currencySpecificWidget(index, currency)
+        : _followerUpgradeWidget(followers[index]);
+  }
+
+  Widget _currencySpecificWidget(int index, CurrencyModel currency) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
+      child: Card(
+        child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: <Widget>[
+                Column(children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        color: Colors.indigoAccent,
+                        child: Row(children: <Widget>[
+                          Text("Buy "),
+                          Text("[${currency.cost.ceil()}]",
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ]),
+                        onPressed: () => _followerPurchase(this.game, currency),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        color: Colors.indigoAccent,
+                        child: Row(children: <Widget>[
+                          Text("Sell "),
+                          Text("[${currency.cost.ceil()}]",
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ]),
+                        onPressed: () => _followerSell(this.game, currency),
+                      )),
+                ]),
+                Expanded(
+                  child: Column(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            currency.title,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Own ${currency.amount}",
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(children: <Widget>[
+                        Text(
+                          '+ ${currency.baseProd.ceil()} ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Icon(Icons.supervised_user_circle, color: Colors.black)
+                      ]),
+                      index == 1 ? Row(children: <Widget>[
+                        Text(
+                          '- ${currency.baseProd.ceil()} ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Icon(
+                          Icons.flash_on,
+                          color: Color.fromARGB(255, 136, 14, 79),
+                        ),
+                      ]) : new Container(width: 0, height: 0),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ),
+    );
+  }
+
+  _followerPurchase(MyGame game, CurrencyModel purchase) {
     if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
       setState(() {
         purchase.amount++;
@@ -120,7 +227,7 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  _followerSell(MyGame game, FollowerModel purchase) {
+  _followerSell(MyGame game, CurrencyModel purchase) {
     if (purchase.amount >= 1) {
       setState(() {
         purchase.amount--;
@@ -132,9 +239,9 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  Widget _followerUpgradeWidget(FollowerModel purchase) {
+  Widget _followerUpgradeWidget(CurrencyModel purchase) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
+      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -163,7 +270,7 @@ class PurchasePageState extends State<PurchasePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "UPGRADE",
+                          "Upgrade",
                           style: TextStyle(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.left,
                         ),
@@ -186,119 +293,29 @@ class PurchasePageState extends State<PurchasePage> {
                 ]),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, top:16.0),
-                child:Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(children: <Widget>[
-                        Text(
-                          '+ ${purchase.baseProd.ceil()} %',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Icon(Icons.supervised_user_circle, color: Colors.black)
-                      ]),
-                    ],
-                  ),
+                padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Row(children: <Widget>[
+                      Text(
+                        '+ ${purchase.baseProd.ceil()} %',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Icon(Icons.supervised_user_circle, color: Colors.black)
+                    ]),
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
     );
-  }
+  }        
 
-Widget _followerWidget(FollowerModel purchase) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: <Widget>[
-              Column(children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.only(right: 16.0, top: 8.0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Colors.indigoAccent,
-                      child: Row(children: <Widget>[
-                        Text("Buy "),
-                        Text("[${purchase.cost.ceil()}]",
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ]),
-                      onPressed: () => _followerPurchase(this.game, purchase),
-                    )),
-                Padding(
-                    padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Colors.indigoAccent,
-                      child: Row(children: <Widget>[
-                        Text("Sell "),
-                        Text("[${purchase.cost.ceil()}]",
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ]),
-                      onPressed: () => _followerSell(this.game, purchase),
-                    )),
-              ]),
-              Expanded(
-                child: Column(children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          purchase.title,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Own ${purchase.amount}",
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top:16.0),
-                child:Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(children: <Widget>[
-                        Text(
-                          '+ ${purchase.baseProd.ceil()} ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Icon(Icons.supervised_user_circle, color: Colors.black)
-                      ]),
-                    ],
-                  ),
-              ),
-           
-            ],
-              )
-          ),
-        ),
-      );
-
-  }
-
-  _energyPurchase(MyGame game, PurchaseModel purchase) {
+  _energyPurchase(MyGame game, CurrencyModel purchase) {
     if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
@@ -310,7 +327,7 @@ Widget _followerWidget(FollowerModel purchase) {
     }
   }
 
-  _energySell(MyGame game, PurchaseModel purchase) {
+  _energySell(MyGame game, CurrencyModel purchase) {
     if (purchase.amount >= 1) {
       setState(() {
         purchase.amount--;
@@ -322,7 +339,7 @@ Widget _followerWidget(FollowerModel purchase) {
     }
   }
 
-  Widget _purchaseWidget(PurchaseModel purchase) {
+  Widget _purchaseWidget(CurrencyModel purchase) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
       child: Card(
@@ -419,17 +436,6 @@ Widget _followerWidget(FollowerModel purchase) {
   }
 }
 
-class PurchaseModel {
-  double cost;
-  int amount;
-  final double baseProd;
-  final String title;
-  final String description;
-
-  PurchaseModel(
-      this.cost, this.amount, this.baseProd, this.title, this.description);
-}
-
 const List<Category> categories = <Category>[
   Category(name: 'Energy', icon: Icons.offline_bolt, index: 1),
   Category(name: 'Followers', icon: Icons.supervised_user_circle, index: 2),
@@ -467,11 +473,11 @@ class Category {
   final int index;
 }
 
-List<FollowerModel> followers = [
-  FollowerModel(1, 0, 1, "Articles ", "1"),
-  FollowerModel(4, 0, 5, "Loudspeaker", "2"),
-  FollowerModel(40, 0, 20, "Apostles", "3"),
-  FollowerModel(350, 0, 100, "Communion", "4"),
+List<CurrencyModel> followers = [
+  CurrencyModel(1, 0, 1, "Articles ", "1"),
+  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
+  CurrencyModel(40, 0, 20, "Apostles", "3"),
+  CurrencyModel(350, 0, 100, "Communion", "4"),
 ];
 
 void setFollowerValues(game) {
@@ -481,13 +487,13 @@ void setFollowerValues(game) {
   followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
 }
 
-class FollowerModel {
+class CurrencyModel {
   double cost;
   int amount;
   final double baseProd;
   final String title;
   final String description;
 
-  FollowerModel(
+  CurrencyModel(
       this.cost, this.amount, this.baseProd, this.title, this.description);
 }

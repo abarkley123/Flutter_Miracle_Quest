@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
+import '../util/open_card.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class PurchasePage extends StatefulWidget {
   final MyGame game;
@@ -68,13 +70,13 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   Widget choiceWidget(Category choice) {
-    return choice.index == 1 ? Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 16.0),
           child: Text(
-            'Generate Energy',
+            'Generate ' + (choice.index == 1 ? 'Energy' : 'Followers'),
             style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
           ),
         ),
@@ -83,39 +85,28 @@ class PurchasePageState extends State<PurchasePage> {
         ),
         Expanded(
           child: ListView.builder(
-              itemCount: purchases.length,
+              shrinkWrap: true,
+              itemCount:
+                  choice.index == 1 ? purchases.length : followers.length,
               itemBuilder: (BuildContext context, int index) {
-                return _purchaseWidget(purchases[index]);
+                return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 4,
+                    child: Swiper(
+                      itemBuilder: (BuildContext context, int ind) {
+                        return ind == 0 ? (choice.index == 1
+                            ? _purchaseWidget(purchases[index])
+                            : _followerWidget(followers[index])) : _followerUpgradeWidget(followers[index]);
+                      },
+                      itemCount: 2,
+                      viewportFraction: 1,
+                      scale: 0.95,
+                    ));
               }),
         ),
       ],
-    )
-    :
-    Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 30.0, horizontal: 16.0),
-              child: Text(
-                'Generate Followers',
-                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            ),
-            Expanded(
-              child: ListView.builder(
-                  itemCount: purchases.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _followerWidget(followers[index]);
-                  }),
-            ),
-          ],
-        );
+    );
   }
-
 
   _followerPurchase(MyGame game, FollowerModel purchase) {
     if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
@@ -143,7 +134,7 @@ class PurchasePageState extends State<PurchasePage> {
 
   Widget _followerWidget(FollowerModel purchase) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -153,7 +144,87 @@ class PurchasePageState extends State<PurchasePage> {
                 Padding(
                     padding: const EdgeInsets.only(right: 16.0, top: 8.0),
                     child: RaisedButton(
-                           child: Row(children: <Widget>[
+                      textColor: Colors.white,
+                      color: Colors.indigoAccent,
+                      child: Row(children: <Widget>[
+                        Text("Buy "),
+                        Text("[${purchase.cost.ceil()}]",
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ]),
+                      onPressed: () => _followerPurchase(this.game, purchase),
+                    )),
+              ]),
+              Expanded(
+                child: Column(children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "UPGRADE",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Own ${purchase.amount}",
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Row(children: <Widget>[
+                        Text(
+                          '+ ${purchase.baseProd.ceil()} %',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Icon(Icons.supervised_user_circle, color: Colors.black)
+                      ]),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+Widget _followerUpgradeWidget(FollowerModel purchase) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top:16.0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: <Widget>[
+              Column(children: <Widget>[
+                Padding(
+                    padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Colors.indigoAccent,
+                      child: Row(children: <Widget>[
                         Text("Buy "),
                         Text("[${purchase.cost.ceil()}]",
                             style: TextStyle(fontWeight: FontWeight.bold))
@@ -163,7 +234,9 @@ class PurchasePageState extends State<PurchasePage> {
                 Padding(
                     padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
                     child: RaisedButton(
-                          child: Row(children: <Widget>[
+                      textColor: Colors.white,
+                      color: Colors.indigoAccent,
+                      child: Row(children: <Widget>[
                         Text("Sell "),
                         Text("[${purchase.cost.ceil()}]",
                             style: TextStyle(fontWeight: FontWeight.bold))
@@ -397,18 +470,18 @@ class Category {
 }
 
 List<FollowerModel> followers = [
-    FollowerModel(1, 0, 1, "Articles ", "1"),
-    FollowerModel(4, 0, 5, "Loudspeaker", "2"),
-    FollowerModel(40, 0, 20, "Apostles", "3"),
-    FollowerModel(350, 0, 100, "Communion", "4"),
-  ];
+  FollowerModel(1, 0, 1, "Articles ", "1"),
+  FollowerModel(4, 0, 5, "Loudspeaker", "2"),
+  FollowerModel(40, 0, 20, "Apostles", "3"),
+  FollowerModel(350, 0, 100, "Communion", "4"),
+];
 
-  void setFollowerValues(game) {
-    followers[0].amount = game.prefs.getInt("Follower0Amount") ?? 0;
-    followers[1].amount = game.prefs.getInt("Follower1Amount") ?? 0;
-    followers[2].amount = game.prefs.getInt("Follower2Amount") ?? 0;
-    followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
-  }
+void setFollowerValues(game) {
+  followers[0].amount = game.prefs.getInt("Follower0Amount") ?? 0;
+  followers[1].amount = game.prefs.getInt("Follower1Amount") ?? 0;
+  followers[2].amount = game.prefs.getInt("Follower2Amount") ?? 0;
+  followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
+}
 
 class FollowerModel {
   double cost;

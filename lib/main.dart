@@ -223,6 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         break;
       case 1:
+        //return Container(child: PurchasePage(this._game));
         return Container(child: PurchasePage(this._game));
         break;
       case 2:

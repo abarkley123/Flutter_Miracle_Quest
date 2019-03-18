@@ -34,7 +34,11 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
 
   @override
   dispose() {
-    _controller.dispose();
+    try {
+      _controller.dispose();
+    } catch(exception) {
+      print("Problems disposing progress button animation controller..");
+    }
     super.dispose();
   }
 

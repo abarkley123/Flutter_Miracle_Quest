@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
-import '../util/open_card.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class PurchasePage extends StatefulWidget {
@@ -12,26 +11,13 @@ class PurchasePage extends StatefulWidget {
   PurchasePageState createState() => PurchasePageState(game);
 }
 
-List<CurrencyModel> purchases = [
-  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
-  CurrencyModel(10, 0, 5, "Intern", "2"),
-  CurrencyModel(50, 0, 20, "Shrine", "3"),
-  CurrencyModel(500, 0, 100, "Temple", "4"),
-];
-
 class PurchasePageState extends State<PurchasePage> {
   double width;
   final MyGame game;
 
   PurchasePageState(this.game) {
-    setPurchaseValues();
-  }
-
-  void setPurchaseValues() {
-    purchases[0].amount = game.prefs.getInt("Energy0Amount") ?? 0;
-    purchases[1].amount = game.prefs.getInt("Energy1Amount") ?? 0;
-    purchases[2].amount = game.prefs.getInt("Energy2Amount") ?? 0;
-    purchases[3].amount = game.prefs.getInt("Energy3Amount") ?? 0;
+    setPurchaseValues(this.game);
+    setFollowerValues(this.game);
   }
 
   @override
@@ -113,7 +99,8 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   Widget _currencySpecificWidget(int index, int currencyNum) {
-    CurrencyModel currency = index == 1 ? purchases[currencyNum] : followers[currencyNum];
+    CurrencyModel currency =
+        index == 1 ? purchases[currencyNum] : followers[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
       child: Card(
@@ -133,7 +120,9 @@ class PurchasePageState extends State<PurchasePage> {
                           Text("[${currency.cost.ceil()}]",
                               style: TextStyle(fontWeight: FontWeight.bold))
                         ]),
-                        onPressed: () => index == 1 ? _energyPurchase(this.game, currency) : _followerPurchase(this.game, currency),
+                        onPressed: () => index == 1
+                            ? _energyPurchase(this.game, currency)
+                            : _followerPurchase(this.game, currency),
                       )),
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
@@ -145,7 +134,7 @@ class PurchasePageState extends State<PurchasePage> {
                           Text("[${currency.cost.ceil()}]",
                               style: TextStyle(fontWeight: FontWeight.bold))
                         ]),
-                        onPressed: () => index == 1 ? _energySell(this.game, currency) : _followerSell(this.game, currency),
+                        onPressed: () => _sellItem(this.game, currency, index)
                       )),
                 ]),
                 Expanded(
@@ -213,32 +202,9 @@ class PurchasePageState extends State<PurchasePage> {
     );
   }
 
-  _followerPurchase(MyGame game, CurrencyModel purchase) {
-    if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
-      setState(() {
-        purchase.amount++;
-      });
-      game.ch
-          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
-      game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
-          purchases[2].amount, purchases[3].amount);
-    }
-  }
-
-  _followerSell(MyGame game, CurrencyModel purchase) {
-    if (purchase.amount >= 1) {
-      setState(() {
-        purchase.amount--;
-      });
-      game.ch
-          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
-      game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
-          purchases[2].amount, purchases[3].amount);
-    }
-  }
-
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
-    CurrencyModel currency = index == 1 ? purchases[currencyNum] : followers[currencyNum];
+    CurrencyModel currency =
+        index == 1 ? purchases[currencyNum] : followers[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
       child: Card(
@@ -257,7 +223,9 @@ class PurchasePageState extends State<PurchasePage> {
                         Text("[${currency.cost.ceil()}]",
                             style: TextStyle(fontWeight: FontWeight.bold))
                       ]),
-                      onPressed: () => index == 1 ? _energyPurchase(this.game, currency) : _followerPurchase(this.game, currency),
+                      onPressed: () => index == 1
+                          ? _energyPurchase(this.game, currency)
+                          : _followerPurchase(this.game, currency),
                     )),
               ]),
               Expanded(
@@ -305,17 +273,17 @@ class PurchasePageState extends State<PurchasePage> {
                       Icon(Icons.supervised_user_circle, color: Colors.black)
                     ]),
                     index == 1
-                          ? Row(children: <Widget>[
-                              Text(
-                                '- ${currency.baseProd.ceil()} %',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Icon(
-                                Icons.flash_on,
-                                color: Color.fromARGB(255, 136, 14, 79),
-                              ),
-                            ])
-                          : new Container(width: 0, height: 0),
+                        ? Row(children: <Widget>[
+                            Text(
+                              '- ${currency.baseProd.ceil()} %',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Icon(
+                              Icons.flash_on,
+                              color: Color.fromARGB(255, 136, 14, 79),
+                            ),
+                          ])
+                        : new Container(width: 0, height: 0),
                   ],
                 ),
               ),
@@ -324,6 +292,19 @@ class PurchasePageState extends State<PurchasePage> {
         ),
       ),
     );
+  }
+
+  _followerPurchase(MyGame game, CurrencyModel purchase) {
+    if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
+      setState(() {
+        game.mainCurrencies["Energy"].amount -= purchase.cost;
+        purchase.amount++;
+      });
+      game.ch
+          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
+      game.saveFollowerPurchase(followers[0].amount, followers[1].amount,
+          followers[2].amount, followers[3].amount);
+    }
   }
 
   _energyPurchase(MyGame game, CurrencyModel purchase) {
@@ -338,15 +319,23 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  _energySell(MyGame game, CurrencyModel purchase) {
-    if (purchase.amount >= 1) {
+  _sellItem(MyGame game, CurrencyModel currency, int index) {
+    if (currency.amount >= 1) {
       setState(() {
-        purchase.amount--;
+        currency.amount--;
       });
-      game.ch
-          .purchasePassive(game.mainCurrencies["Energy"], -purchase.baseProd);
-      game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
-          purchases[2].amount, purchases[3].amount);
+      if (index == 1) {
+        game.ch
+            .purchasePassive(game.mainCurrencies["Energy"], -currency.baseProd);
+        game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
+            purchases[2].amount, purchases[3].amount);
+      } else if (index == 2) {
+        print('here');
+        game.ch.purchasePassive(
+            game.mainCurrencies["Followers"], currency.baseProd);
+        game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
+            purchases[2].amount, purchases[3].amount);
+      }
     }
   }
 }
@@ -395,11 +384,25 @@ List<CurrencyModel> followers = [
   CurrencyModel(350, 0, 100, "Communion", "4"),
 ];
 
-void setFollowerValues(game) {
+void setFollowerValues(MyGame game) {
   followers[0].amount = game.prefs.getInt("Follower0Amount") ?? 0;
   followers[1].amount = game.prefs.getInt("Follower1Amount") ?? 0;
   followers[2].amount = game.prefs.getInt("Follower2Amount") ?? 0;
   followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
+}
+
+List<CurrencyModel> purchases = [
+  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
+  CurrencyModel(10, 0, 5, "Intern", "2"),
+  CurrencyModel(50, 0, 20, "Shrine", "3"),
+  CurrencyModel(500, 0, 100, "Temple", "4"),
+];
+
+void setPurchaseValues(MyGame game) {
+  purchases[0].amount = game.prefs.getInt("Energy0Amount") ?? 0;
+  purchases[1].amount = game.prefs.getInt("Energy1Amount") ?? 0;
+  purchases[2].amount = game.prefs.getInt("Energy2Amount") ?? 0;
+  purchases[3].amount = game.prefs.getInt("Energy3Amount") ?? 0;
 }
 
 class CurrencyModel {

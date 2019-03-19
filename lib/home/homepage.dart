@@ -70,7 +70,12 @@ class HomePageState extends State<HomePage> {
           children: categories.map((Category choice) {
             return new Padding(
               padding: const EdgeInsets.all(0.0),
-              child: _energyWidget(),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 2,
+                itemBuilder: (BuildContext context, int index) {
+                  return _energyWidget(index);
+              }),
             );
           }).toList(),
         ),
@@ -78,10 +83,10 @@ class HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget _energyWidget() {
+  Widget _energyWidget(int index) {
+    String type = index == 0 ? "Energy" : "Followers";
     return Container(
         color: Color(0xFFecf2f9),
-        margin: EdgeInsets.only(top: 8.0),
         child: Container(
           margin:
               EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
@@ -89,7 +94,7 @@ class HomePageState extends State<HomePage> {
               child: Column(children: <Widget>[
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                child: Text('Energy',
+                child: Text(type,
                     style: TextStyle(
                       decorationStyle: TextDecorationStyle.wavy,
                       fontWeight: FontWeight.bold,
@@ -98,7 +103,7 @@ class HomePageState extends State<HomePage> {
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
                 child: Text(
-                    '${this.game.mainCurrencies["Energy"].passive} per second')),
+                    '${this.game.mainCurrencies[type].passive} per second')),
             Container(
               height: 80.0,
               margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -107,7 +112,7 @@ class HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Expanded(
                     child: GestureDetector(
-                        child: ProgressButton(this.game, "Energy")),
+                        child: ProgressButton(this.game, type)),
                   ),
                 ],
               ),

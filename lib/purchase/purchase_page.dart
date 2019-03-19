@@ -314,18 +314,17 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   _sellItem(MyGame game, CurrencyModel currency, int index) {
+    print(index);
     if (currency.amount >= 1) {
       setState(() {
         currency.amount--;
       });
       if (index == 1) {
-        game.ch
-            .purchasePassive(game.mainCurrencies["Energy"], -currency.baseProd);
+        game.ch.sellPassive(game.mainCurrencies["Energy"], currency.baseProd);
         game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
             purchases[2].amount, purchases[3].amount);
       } else if (index == 2) {
-        print('here');
-        game.ch.purchasePassive(
+        game.ch.sellPassive(
             game.mainCurrencies["Followers"], currency.baseProd);
         game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
             purchases[2].amount, purchases[3].amount);

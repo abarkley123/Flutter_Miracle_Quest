@@ -41,7 +41,6 @@ class HomePageState extends State<HomePage> {
   HomePageState(this.game);
 
   double screenWidth = 0.0;
-//  EdgeInsets smallItemPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -68,22 +67,33 @@ class HomePageState extends State<HomePage> {
         ),
         body: new TabBarView(
           children: categories.map((Category choice) {
-            return new Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (BuildContext context, int index) {
-                  return _energyWidget(index);
-              }),
-            );
+            return _clickWidget(choice.index);
           }).toList(),
         ),
       ),
     ));
   }
 
-  Widget _energyWidget(int index) {
+  Widget _clickWidget(int choice) {
+    if (choice == 1) {
+      return new Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: 2,
+            itemBuilder: (BuildContext context, int index) {
+              return _currencyWidget(index);
+            }),
+      );
+    } else {
+      return new Padding(
+        padding: const EdgeInsets.all(0.0),
+        child: Text("TEST")
+      );
+    }
+  }
+
+  Widget _currencyWidget(int index) {
     String type = index == 0 ? "Energy" : "Followers";
     return Container(
         color: Color(0xFFecf2f9),
@@ -101,9 +111,16 @@ class HomePageState extends State<HomePage> {
                       fontSize: 20,
                     ))),
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                child: Text(
-                    '${this.game.mainCurrencies[type].passive} per second')),
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+              child: Column(children: <Widget>[
+                (index == 1
+                    ? Text(
+                        'Net: ${this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive} per second')
+                    : Container(width: 0.0, height: 0.0)),
+                Text((index == 0 ? '' : 'Gross: ') +
+                    '${this.game.mainCurrencies[type].passive} per second'),
+              ]),
+            ),
             Container(
               height: 80.0,
               margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
@@ -111,96 +128,13 @@ class HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Expanded(
-                    child: GestureDetector(
-                        child: ProgressButton(this.game, type)),
+                    child:
+                        GestureDetector(child: ProgressButton(this.game, type)),
                   ),
                 ],
               ),
             ),
           ])),
-        ));
-  }
-
-  Widget _mainWidget() {
-    return Container(
-        color: Color(0xFFecf2f9),
-        margin: EdgeInsets.only(top: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Card(
-                child: Column(children: <Widget>[
-              Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                  child: Text('Energy',
-                      style: TextStyle(
-                        decorationStyle: TextDecorationStyle.wavy,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ))),
-              Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                  child: Text(
-                      '${this.game.mainCurrencies["Energy"].passive} per second')),
-              Container(
-                height: 80.0,
-                margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Expanded(
-                      child: GestureDetector(
-                          child: ProgressButton(this.game, "Energy")),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
-                  child: Text('Followers',
-                      style: TextStyle(
-                        decorationStyle: TextDecorationStyle.wavy,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ))),
-            ])),
-            Card(
-              child: Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 5.0),
-                          child: Text(
-                              'Net: ${(this.game.mainCurrencies["Followers"].passive * this.game.mainCurrencies["Followers"].modifier) - (this.game.mainCurrencies["Energy"].passive * this.game.mainCurrencies["Energy"].modifier)} per second')),
-                      Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 5.0),
-                          child: Text(
-                              'Gross: ${this.game.mainCurrencies["Followers"].passive * this.game.mainCurrencies["Followers"].modifier} per second')),
-                    ],
-                  ),
-                  Container(
-                      height: 80.0,
-                      margin: EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 15.0),
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Expanded(
-                              child: GestureDetector(
-                                  child:
-                                      ProgressButton(this.game, "Followers")),
-                            )
-                          ]))
-                ],
-              ),
-            )
-          ],
         ));
   }
 }

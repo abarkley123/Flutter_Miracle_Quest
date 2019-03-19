@@ -3,7 +3,6 @@ import '../game/game.dart';
 
 Widget userInfoWidget(MyGame game, Widget energy, Widget followers) {
   return Container(
-    color: Color(0xFFecf2f9),
     margin: EdgeInsets.symmetric(horizontal: 16.0),
     child: Row(
       children: <Widget>[

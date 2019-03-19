@@ -98,23 +98,26 @@ class Energy extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f}) {
-    if (f.amount > ((this._incrementable * this._modifier) - (f.incrementable * f._modifier))) {
+    if (f.amount >
+        ((this._incrementable * this._modifier) -
+            (f.incrementable * f._modifier))) {
       this._amount += this._incrementable * this._modifier;
       f._amount -= (this._incrementable * this._modifier);
     } else {
-      addMinimumAmount(f);    
+      addMinimumAmount(f);
     }
 
     adjustForNegatives();
   }
 
   void addMinimumAmount(MainCurrency f) {
-    if (f._passiveIncrementable * f._modifier >= (this._passiveIncrementable * this._modifier)) {
+    if (f._passiveIncrementable * f._modifier >=
+        (this._passiveIncrementable * this._modifier)) {
       this.amount += this._passiveIncrementable * this._modifier;
     } else {
       this.amount += f._passiveIncrementable * f._modifier;
     }
-    f._amount = 0;       
+    f._amount = 0;
   }
 }
 
@@ -127,13 +130,7 @@ class Followers extends MainCurrency {
 
   @override
   incrementPassive({MainCurrency f}) {
-    if (this.amount + (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier) <= 0
-      || (this.amount <= 0 && (this._passiveIncrementable * this._modifier - (f._passiveIncrementable * f._modifier)) <= (f._passiveIncrementable * f._modifier))) {
-      this.amount = 0;
-    } else {
-      this.amount += (this._passiveIncrementable * this._modifier) - (f._passiveIncrementable * f._modifier);
-    }
-
+    this.amount += (this._passiveIncrementable * this._modifier);
     adjustForNegatives();
   }
 
@@ -161,6 +158,10 @@ class CurrencyHandler {
 
   void purchasePassive(MainCurrency c, double amount, {MainCurrency f}) {
     c.increasePassiveIncrement(amount);
+  }
+
+  void sellPassive(MainCurrency c, double amount, {MainCurrency f}) {
+    c.increasePassiveIncrement(-amount);
   }
 }
 // other currencies to come - flame, perk points etc.

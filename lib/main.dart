@@ -24,7 +24,6 @@ void main() async {
     game.update(cycles++);
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
     home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
-
     if (cycles % 20 == 0) game.saveData();
   });
 

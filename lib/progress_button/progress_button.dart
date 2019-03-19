@@ -45,7 +45,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return PhysicalModel(
-        color: Colors.grey[300],
+        color: Colors.indigoAccent,
         elevation: calculateElevation(),
         borderRadius: BorderRadius.circular(25.0),
         child: Container(
@@ -55,7 +55,7 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
           child: RaisedButton(
             padding: EdgeInsets.all(0.0),
             color: _state == 2 ? (this.type.startsWith("E") && this.game.mainCurrencies["Followers"].amount <= 0 ? Colors.red : Colors.green
-            ) : Colors.grey[300],
+            ) :  Colors.indigoAccent,
             child: buildButtonChild(),
             onPressed: () {},
             onHighlightChanged: (isPressed) {
@@ -109,9 +109,9 @@ class _ProgressButtonState extends State<ProgressButton> with TickerProviderStat
         children: <Widget> [Text(
         'Generate ' + (this.type.startsWith("E") ? this.game.mainCurrencies["Energy"].incrementable.toStringAsFixed(1) 
         : this.game.mainCurrencies["Followers"].incrementable.toStringAsFixed(1)) + " ",
-        style: TextStyle(color: Colors.black, fontSize: 20.0),
+        style: TextStyle(color: Colors.white, fontSize: 20.0),
       ),
-      Icon(this.type.startsWith("E") ? Icons.offline_bolt : Icons.supervised_user_circle),
+      Icon(this.type.startsWith("E") ? Icons.offline_bolt : Icons.supervised_user_circle, color: Colors.white,),
         ]);
     } else if (_state == 1) {
       return SizedBox(

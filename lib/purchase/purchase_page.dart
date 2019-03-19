@@ -16,9 +16,8 @@ class PurchasePageState extends State<PurchasePage> {
   final MyGame game;
 
   PurchasePageState(this.game) {
-    setPurchaseValues(this.game);
-    setFollowerValues(this.game);
     setCurrencyValue(this.game, "Follower");
+    setCurrencyValue(this.game, "Energy");
   }
 
   @override
@@ -122,15 +121,15 @@ class PurchasePageState extends State<PurchasePage> {
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
                       child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.indigoAccent,
-                        child: Row(children: <Widget>[
-                          Text("Sell "),
-                          Text("[${currency.cost.ceil()}]",
-                              style: TextStyle(fontWeight: FontWeight.bold))
-                        ]),
-                        onPressed: () => _sellItem(this.game, currency, index)
-                      )),
+                          textColor: Colors.white,
+                          color: Colors.indigoAccent,
+                          child: Row(children: <Widget>[
+                            Text("Sell "),
+                            Text("[${currency.cost.ceil()}]",
+                                style: TextStyle(fontWeight: FontWeight.bold))
+                          ]),
+                          onPressed: () =>
+                              _sellItem(this.game, currency, index))),
                 ]),
                 Expanded(
                   child: Column(children: <Widget>[
@@ -335,11 +334,6 @@ class PurchasePageState extends State<PurchasePage> {
   }
 }
 
-const List<Category> categories = <Category>[
-  Category(name: 'Energy', icon: Icons.offline_bolt, index: 1),
-  Category(name: 'Followers', icon: Icons.supervised_user_circle, index: 2),
-];
-
 // Our CategoryCard data object
 class CategoryCard extends StatelessWidget {
   const CategoryCard({Key key, this.choice}) : super(key: key);
@@ -372,47 +366,10 @@ class Category {
   final int index;
 }
 
-List<CurrencyModel> followers = [
-  CurrencyModel(1, 0, 1, "Articles ", "1"),
-  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
-  CurrencyModel(40, 0, 20, "Apostles", "3"),
-  CurrencyModel(350, 0, 100, "Communion", "4"),
+const List<Category> categories = <Category>[
+  Category(name: 'Energy', icon: Icons.offline_bolt, index: 1),
+  Category(name: 'Followers', icon: Icons.supervised_user_circle, index: 2),
 ];
-
-void setFollowerValues(MyGame game) {
-  followers[0].amount = game.prefs.getInt("Follower0Amount") ?? 0;
-  followers[1].amount = game.prefs.getInt("Follower1Amount") ?? 0;
-  followers[2].amount = game.prefs.getInt("Follower2Amount") ?? 0;
-  followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
-}
-
-void setCurrencyValue(MyGame game, String currencyType) {
-  if (currencyType == "Follower") {
-    setValues(followers, currencyType);
-  } else if (currencyType == "Energy") {
-
-  }
-}
-
-void setValues(List<CurrencyModel> currency, String currencyType) {
-  for (int i = 0; i < currency.length; i++) {
-    print(i);
-  }
-}
-
-List<CurrencyModel> purchases = [
-  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
-  CurrencyModel(10, 0, 5, "Intern", "2"),
-  CurrencyModel(50, 0, 20, "Shrine", "3"),
-  CurrencyModel(500, 0, 100, "Temple", "4"),
-];
-
-void setPurchaseValues(MyGame game) {
-  purchases[0].amount = game.prefs.getInt("Energy0Amount") ?? 0;
-  purchases[1].amount = game.prefs.getInt("Energy1Amount") ?? 0;
-  purchases[2].amount = game.prefs.getInt("Energy2Amount") ?? 0;
-  purchases[3].amount = game.prefs.getInt("Energy3Amount") ?? 0;
-}
 
 class CurrencyModel {
   double cost;
@@ -423,4 +380,33 @@ class CurrencyModel {
 
   CurrencyModel(
       this.cost, this.amount, this.baseProd, this.title, this.description);
+}
+
+List<CurrencyModel> followers = [
+  CurrencyModel(1, 0, 1, "Articles ", "1"),
+  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
+  CurrencyModel(40, 0, 20, "Apostles", "3"),
+  CurrencyModel(350, 0, 100, "Communion", "4"),
+];
+
+List<CurrencyModel> purchases = [
+  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
+  CurrencyModel(10, 0, 5, "Intern", "2"),
+  CurrencyModel(50, 0, 20, "Shrine", "3"),
+  CurrencyModel(500, 0, 100, "Temple", "4"),
+];
+
+void setCurrencyValue(MyGame game, String currencyType) {
+  if (currencyType == "Follower") {
+    setValues(game, followers, currencyType);
+  } else if (currencyType == "Energy") {
+    setValues(game, purchases, currencyType);
+  }
+}
+
+void setValues(MyGame game, List<CurrencyModel> currency, String currencyType) {
+  for (int i = 0; i < currency.length; i++) {
+    currency[i].amount =
+        game.prefs.getInt(currencyType + i.toString() + "Amount") ?? 0;
+  }
 }

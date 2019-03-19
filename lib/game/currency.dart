@@ -18,8 +18,12 @@ abstract class Currency implements Mutation {
     return this._amount;
   }
 
-  get activeIncrement {
+  get active {
     return this._incrementable;
+  }
+
+  set active(double amount) {
+    this._incrementable = amount;
   }
 
   get incrementable {

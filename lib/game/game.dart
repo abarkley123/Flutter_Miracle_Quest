@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'currency.dart';
 import '../main.dart';
+import 'upgrade.dart';
 
 class MyGame extends BaseGame {
 

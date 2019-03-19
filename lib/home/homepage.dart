@@ -225,7 +225,7 @@ class UpgradeModel {
 }
 
 List<UpgradeModel> upgrades = [
-  UpgradeModel(1, 0, 2, "Power ", "Click power +100%"),
-  UpgradeModel(4, 0, 0.9, "Speed", "Click speed +10%"),
-  UpgradeModel(40, 0, 1.05, "Luck", "Superclick chance +5%"),
+  UpgradeModel(10, 0, 2, "Power ", "Click power +100%"),
+  UpgradeModel(50, 0, 0.9, "Speed", "Click speed +10%"),
+  UpgradeModel(100, 0, 1.05, "Luck", "Superclick chance +5%"),
 ];

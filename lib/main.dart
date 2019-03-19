@@ -25,7 +25,7 @@ void main() async {
     home.hps.energy.state._updateSeconds(game.mainCurrencies["Energy"].amount);
     home.hps.followers.state._updateSeconds(game.mainCurrencies["Followers"].amount);
 
-    if (cycles % 2 == 0) game.saveData();
+    if (cycles % 20 == 0) game.saveData();
   });
 
   runApp(game.widget);
@@ -106,13 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
             new DrawerHeader(
                 padding: const EdgeInsets.all(16.0),
                 child: new UserAccountsDrawerHeader(
-                  // accountName: new Column(
-                  //   crossAxisAlignment:CrossAxisAlignment.center,
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   children: <Widget> [Text('Miracle Quest',
-                  //   style: TextStyle(color: Colors.black, fontSize: 20.0),
-                  //   )],
-                  // ),
+                  accountName: new Container(
+                    width: 0.0,
+                    height: 0.0,
+                  ),
                    accountEmail: new Column(
                     crossAxisAlignment:CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,

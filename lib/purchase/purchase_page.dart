@@ -18,6 +18,7 @@ class PurchasePageState extends State<PurchasePage> {
   PurchasePageState(this.game) {
     setPurchaseValues(this.game);
     setFollowerValues(this.game);
+    setCurrencyValue(this.game, "Follower");
   }
 
   @override
@@ -60,14 +61,7 @@ class PurchasePageState extends State<PurchasePage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 16.0),
-          child: Text(
-            'Generate ' + (choice.index == 1 ? 'Energy' : 'Followers'),
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
         ),
         Expanded(
           child: ListView.builder(
@@ -76,6 +70,7 @@ class PurchasePageState extends State<PurchasePage> {
                   choice.index == 1 ? purchases.length : followers.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
+                    color: Color(0xFFecf2f9),
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 4,
                     child: Swiper(
@@ -389,6 +384,20 @@ void setFollowerValues(MyGame game) {
   followers[1].amount = game.prefs.getInt("Follower1Amount") ?? 0;
   followers[2].amount = game.prefs.getInt("Follower2Amount") ?? 0;
   followers[3].amount = game.prefs.getInt("Follower3Amount") ?? 0;
+}
+
+void setCurrencyValue(MyGame game, String currencyType) {
+  if (currencyType == "Follower") {
+    setValues(followers, currencyType);
+  } else if (currencyType == "Energy") {
+
+  }
+}
+
+void setValues(List<CurrencyModel> currency, String currencyType) {
+  for (int i = 0; i < currency.length; i++) {
+    print(i);
+  }
 }
 
 List<CurrencyModel> purchases = [

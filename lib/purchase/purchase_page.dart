@@ -59,9 +59,6 @@ class PurchasePageState extends State<PurchasePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-        ),
         Expanded(
           child: ListView.builder(
               shrinkWrap: true,

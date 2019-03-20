@@ -10,14 +10,20 @@ class MyGame extends BaseGame {
   MyApp _widget;
   Followers followers;
   Energy energy;
+  //this should be delegated to a subclass
   Map<String, MainCurrency> _mainCurrencies = new Map();
+  Map<String, Upgrade> _upgrades = new Map();
   CurrencyHandler ch = new CurrencyHandler();
+  UpgradeHandler upgradeHandler = new UpgradeHandler();
 
   MyGame(this.prefs) {
     energy = new Energy();
     followers = new Followers();
     _mainCurrencies["Energy"] = energy;
     _mainCurrencies["Followers"] = followers;
+    _upgrades["Click"] = new ClickUpgrade(10.0, 0, 2.0);
+    _upgrades["Tick"] = new ClickUpgrade(40.0, 0, 1.1);
+    _upgrades["Critical"] = new ClickUpgrade(100.0, 0, 1.05);
     loadData();
   }
 
@@ -37,6 +43,10 @@ class MyGame extends BaseGame {
 
   get mainCurrencies {
     return this._mainCurrencies;
+  }
+
+  get upgrades {
+    return this._upgrades;
   }
 
   saveData() {

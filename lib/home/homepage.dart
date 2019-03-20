@@ -183,7 +183,7 @@ class HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "${upgrade.description}",
+                          "${upgrade.description} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
                           textAlign: TextAlign.left,
                         ),
                       ],
@@ -199,10 +199,10 @@ class HomePageState extends State<HomePage> {
                         color: Colors.indigoAccent,
                         child: Row(children: <Widget>[
                           Text("Buy "),
-                          Text("[${upgrade.cost.ceil()}]",
+                          Text("[${game.upgrades[upgrade.type].cost.ceil()}]",
                               style: TextStyle(fontWeight: FontWeight.bold))
                         ]),
-                        onPressed: () => print('pressed'))),
+                        onPressed: () => _upgradeClickPower(this.game, upgrade.type))),
               ]),
                 ]),
             ],
@@ -210,6 +210,12 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _upgradeClickPower(MyGame game, type) {
+    setState(() {
+      game.upgrades[type] = game.upgradeHandler.activePurchase(game);
+    });
   }
 }
 
@@ -219,13 +225,14 @@ class UpgradeModel {
   double multiplier;
   final String title;
   final String description;
+  final String type;
 
   UpgradeModel(
-      this.cost, this.amount, this.multiplier, this.title, this.description);
+      this.cost, this.amount, this.multiplier, this.title, this.description, this.type);
 }
 
 List<UpgradeModel> upgrades = [
-  UpgradeModel(10, 0, 2, "Power ", "Click power +100%"),
-  UpgradeModel(50, 0, 0.9, "Speed", "Click speed +10%"),
-  UpgradeModel(100, 0, 1.05, "Luck", "Superclick chance +5%"),
+  UpgradeModel(10, 0, 2, "Power ", "Click power +", "Click"),
+  UpgradeModel(50, 0, 0.9, "Speed", "Click speed +", "Tick"),
+  UpgradeModel(100, 0, 1.05, "Luck", "Superclick chance +", "Critical"),
 ];

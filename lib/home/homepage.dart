@@ -18,7 +18,7 @@ class Category {
 }
 
 const List<Category> categories = <Category>[
-  Category(name: 'Generate', icon: Icons.battery_charging_full, index: 1),
+  Category(name: 'Generate', icon: Icons.account_circle, index: 1),
   Category(name: 'Augment', icon: Icons.stars, index: 2),
 ];
 

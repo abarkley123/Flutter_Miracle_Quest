@@ -25,19 +25,18 @@ Widget userInfoWidget(MyGame game, Widget energy, Widget followers) {
                 child: followers),
             CircleAvatar(
               backgroundColor: Color.fromARGB(0, 0, 0, 0),
-              child: Icon(Icons.supervised_user_circle, color: Colors.white),
+              child:
+                  Icon(Icons.person, color: Color.fromARGB(255, 19, 193, 100)),
             ),
           ],
         )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add_shopping_cart),
-              tooltip: "VIP Store",
-              onPressed: () => {},
-            ),]
-        ),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_shopping_cart),
+            tooltip: "VIP Store",
+            onPressed: () => {},
+          ),
+        ]),
       ],
     ),
   );

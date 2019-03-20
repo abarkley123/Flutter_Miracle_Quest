@@ -108,8 +108,16 @@ class PurchasePageState extends State<PurchasePage> {
                         color: Colors.indigoAccent,
                         child: Row(children: <Widget>[
                           Text("Buy "),
-                          Text("[${currency.cost.ceil()}]",
-                              style: TextStyle(fontWeight: FontWeight.bold))
+                          Text("[${currency.cost.ceil()}",
+                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Icon(
+                            Icons.flash_on,
+                            color: Color.fromARGB(255, 136, 14, 79),
+                          ),
+                          Text(
+                            "]",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ]),
                         onPressed: () => index == 1
                             ? _energyPurchase(this.game, currency)
@@ -122,8 +130,15 @@ class PurchasePageState extends State<PurchasePage> {
                           color: Colors.indigoAccent,
                           child: Row(children: <Widget>[
                             Text("Sell "),
-                            Text("[${currency.cost.ceil()}]",
-                                style: TextStyle(fontWeight: FontWeight.bold))
+                            Text("[${currency.cost.ceil()}",
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Icon(
+                              Icons.flash_on,
+                              color: Color.fromARGB(255, 136, 14, 79),
+                            ),
+                            Text(
+                              "]",
+                            ),
                           ]),
                           onPressed: () =>
                               _sellItem(this.game, currency, index))),
@@ -321,8 +336,8 @@ class PurchasePageState extends State<PurchasePage> {
         game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
             purchases[2].amount, purchases[3].amount);
       } else if (index == 2) {
-        game.ch.sellPassive(
-            game.mainCurrencies["Followers"], currency.baseProd);
+        game.ch
+            .sellPassive(game.mainCurrencies["Followers"], currency.baseProd);
         game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
             purchases[2].amount, purchases[3].amount);
       }

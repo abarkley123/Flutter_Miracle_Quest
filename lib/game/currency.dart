@@ -33,6 +33,7 @@ abstract class Currency implements Mutation {
 
 abstract class MainCurrency extends Currency {
   double _passiveIncrementable;
+  String action;
 
   MainCurrency() : super() {
     this._passiveIncrementable = 0;
@@ -74,10 +75,21 @@ abstract class MainCurrency extends Currency {
     this._incrementable = 1;
     this._modifier = 1;
   }
+
+  get title {
+    return this.action;
+  }
+
+  set title(String title) {
+    this.action = title;
+  }
 }
 
 class Energy extends MainCurrency {
-  Energy() : super();
+  
+  Energy() : super() {
+    this.title = "Basic Charm";
+  }
 
   void applyModifier(double m) {}
 
@@ -126,7 +138,9 @@ class Energy extends MainCurrency {
 }
 
 class Followers extends MainCurrency {
-  Followers() : super();
+  Followers() : super() {
+    this.title = "Ascension";
+  }
 
   void applyModifier(double m) {}
 

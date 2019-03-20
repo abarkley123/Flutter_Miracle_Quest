@@ -53,8 +53,8 @@ static const List<Category> categories = <Category>[
           ),
           body: new TabBarView(
             children: categories.map((Category choice) {
-              return new Padding(
-                padding: const EdgeInsets.all(0.0),
+              return new Container(
+                    color: Color(0xFFecf2f9),
                 child: new CategoryCard(choice: choice),
               );
             }).toList(),

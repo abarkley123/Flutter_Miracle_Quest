@@ -91,14 +91,14 @@ class _ProgressButtonState extends State<ProgressButton>
     setState(() {
       _state = 1;
     });
-
-    Timer(Duration(milliseconds: 3000), () {
+    double tickMultiplier = this.game.upgrades["Tick"].multiplier;
+    Timer(Duration(milliseconds: (3000 / tickMultiplier).ceil()), () {
       setState(() {
         _state = 2;
       });
     });
 
-    Timer(Duration(milliseconds: 4500), () {
+    Timer(Duration(milliseconds: (4500 / tickMultiplier).ceil()), () {
       if (this.game.mainCurrencies["Followers"].amount >= 0)
         this.type.startsWith("E") ? miracle(this.game) : followers(this.game);
       setState(() {
@@ -194,8 +194,6 @@ class _ProgressButtonState extends State<ProgressButton>
   void reset() {
     _width = double.infinity;
     _animatingReveal = false;
-    //setState(() {
     _state = 0;
-    //});
   }
 }

@@ -147,14 +147,14 @@ class PurchasePageState extends State<PurchasePage> {
                 Expanded(
                   child: Column(children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                      padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 4.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             currency.title,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                             textAlign: TextAlign.left,
                           ),
                         ],

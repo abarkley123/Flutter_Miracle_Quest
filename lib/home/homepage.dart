@@ -2,29 +2,6 @@ import 'package:flutter/material.dart';
 import '../game/game.dart';
 import '../progress_button/progress_button.dart';
 
-miracle(MyGame game) {
-  if (game.mainCurrencies["Followers"].amount <= 0.0) {
-  } else {
-    game.ch.click(game.mainCurrencies["Energy"],
-        f: game.mainCurrencies["Followers"]);
-  }
-}
-
-class Category {
-  const Category({this.name, this.icon, this.index});
-  final String name;
-  final IconData icon;
-  final int index;
-}
-
-const List<Category> categories = <Category>[
-  Category(name: 'Generate', icon: Icons.account_circle, index: 1),
-  Category(name: 'Augment', icon: Icons.stars, index: 2),
-];
-
-followers(MyGame game) {
-  game.ch.click(game.mainCurrencies["Followers"]);
-}
 
 class HomePage extends StatefulWidget {
   MyGame game;
@@ -122,7 +99,7 @@ class HomePageState extends State<HomePage> {
               child: Column(children: <Widget>[
                 (index == 1
                     ? Text(
-                        'Net: ${this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive} per second',
+                        'Net: ${(this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive).toStringAsFixed(1)} per second',
                         style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -158,6 +135,10 @@ class HomePageState extends State<HomePage> {
 
   Widget _purchaseUpgradeWidget(int index) {
     UpgradeModel upgrade = upgrades[index];
+    print(upgrade.type);
+    print(this.game.upgrades);
+    print(this.game.upgrades["Click"].cost.toString());
+    print(this.game.upgrades[upgrade.type].cost.toString());
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card(
@@ -224,7 +205,7 @@ class HomePageState extends State<HomePage> {
                             ),
                           ]),
                           onPressed: () =>
-                              _upgradeClickPower(this.game, upgrade.type))),
+                              _processUpgrade(this.game, upgrade.type))),
                 ]),
               ]),
             ],
@@ -234,11 +215,13 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void _upgradeClickPower(MyGame game, type) {
+  void _processUpgrade(MyGame game, type) {
     if (game.mainCurrencies["Energy"].amount >= game.upgrades[type].cost) {
       setState(() {
-        game.upgrades[type] = game.upgradeHandler.activePurchase(game);
+        game.upgrades[type] = game.upgradeHandler.activePurchase(game, type);
       });
+      game.saveActive();
+      game.saveClickUpgrade(type);
     } else {
       print("Not enough energy for upgrade.");
     }
@@ -246,19 +229,40 @@ class HomePageState extends State<HomePage> {
 }
 
 class UpgradeModel {
-  double cost;
-  int amount;
-  double multiplier;
   final String title;
   final String description;
   final String type;
 
-  UpgradeModel(this.cost, this.amount, this.multiplier, this.title,
-      this.description, this.type);
+  UpgradeModel(this.title,this.description, this.type);
 }
 
 List<UpgradeModel> upgrades = [
-  UpgradeModel(10, 0, 2, "Power ", "Click power +", "Click"),
-  UpgradeModel(50, 0, 0.9, "Speed", "Click speed +", "Tick"),
-  UpgradeModel(100, 0, 1.05, "Luck", "Superclick chance +", "Critical"),
+  UpgradeModel("Power ", "Power +", "Click"),
+  UpgradeModel("Speed", "Speed +", "Tick"),
+  UpgradeModel("Luck", "Critical +", "Critical"),
+];
+
+void miracle(MyGame game) {
+  if (game.mainCurrencies["Followers"].amount <= 0.0) {
+  } else {
+    game.ch.click(game.mainCurrencies["Energy"],
+        f: game.mainCurrencies["Followers"]);
+  }
+}
+
+void followers(MyGame game) {
+  game.ch.click(game.mainCurrencies["Followers"]);
+}
+
+class Category {
+  const Category({this.name, this.icon, this.index});
+  final String name;
+  final IconData icon;
+  final int index;
+}
+
+//could create a generic 'categories controller' and refactor the creation of this class to something generic
+const List<Category> categories = <Category>[
+  Category(name: 'Generate', icon: Icons.account_circle, index: 1),
+  Category(name: 'Augment', icon: Icons.stars, index: 2),
 ];

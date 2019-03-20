@@ -4,7 +4,6 @@ import '../main.dart';
 import 'upgrade.dart';
 
 class MyGame extends BaseGame {
-
   final prefs;
   int counter = 0;
   MyApp _widget;
@@ -22,8 +21,8 @@ class MyGame extends BaseGame {
     _mainCurrencies["Energy"] = energy;
     _mainCurrencies["Followers"] = followers;
     _upgrades["Click"] = new ClickUpgrade(10.0, 0, 2.0);
-    _upgrades["Tick"] = new ClickUpgrade(40.0, 0, 1.1);
-    _upgrades["Critical"] = new ClickUpgrade(100.0, 0, 1.05);
+    _upgrades["Tick"] = new TickUpgrade(40.0, 0, 1.1);
+    _upgrades["Critical"] = new CriticalUpgrade(100.0, 0, 1.05);
     loadData();
   }
 
@@ -75,6 +74,48 @@ class MyGame extends BaseGame {
     followers.amount = prefs.getDouble("Followers") ?? 0;
     energy.passive = prefs.getDouble("EnergyPassive") ?? 0;
     followers.passive = prefs.getDouble("FollowersPassive") ?? 0;
+    loadActive();
+    loadClickUpgrades();
+  }
+
+  saveClickUpgrade(String type) {
+    prefs.setDouble(type + 'cost', _upgrades[type].cost);
+    prefs.setInt(type + 'amount', _upgrades[type].amount);
+    prefs.setDouble(type + 'multiplier', _upgrades[type].multiplier);
+  }
+
+  loadClickUpgrades() {
+    _upgrades.forEach((k, v) {
+      v.cost = resolveDefaultValueFor(prefs.getDouble(k + 'cost'), v.cost);
+      v.amount = resolveDefaultValue(prefs.getInt(k + 'amount'), v.amount);
+      v.multiplier = resolveDefaultValueFor(prefs.getDouble(k + 'multiplier'), v.multiplier);
+    });
+  }
+
+  saveActive() {
+    prefs.setDouble("EnergyActive", energy.active);
+    prefs.setDouble("FollowersActive", followers.active);
+  }
+
+  loadActive() {
+    energy.active = prefs.getDouble("EnergyActive") ?? 1;
+    followers.active = prefs.getDouble("FollowersActive") ?? 1;    
+  }
+
+  int resolveDefaultValue(int value, int defaultValue) {
+    if (value == null) return defaultValue;
+    if (value <= defaultValue) {
+      return defaultValue;
+    }
+    return value;
+  }
+
+  double resolveDefaultValueFor(double value, double defaultValue) {
+    if (value == null) return defaultValue;
+    if (value <= defaultValue) {
+      return defaultValue;
+    }
+    return value;
   }
 
   deleteSave() async {
@@ -82,4 +123,3 @@ class MyGame extends BaseGame {
     _mainCurrencies.forEach((key, value) => value.reset());
   }
 }
-

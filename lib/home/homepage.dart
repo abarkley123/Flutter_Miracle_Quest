@@ -107,27 +107,36 @@ class HomePageState extends State<HomePage> {
     return Container(
         color: Color(0xFFecf2f9),
         child: Container(
-          margin:
-              EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
+          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           child: Card(
               child: Column(children: <Widget>[
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
+                padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                 child: Text(type,
                     style: TextStyle(
-                      decorationStyle: TextDecorationStyle.wavy,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 24,
                     ))),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
               child: Column(children: <Widget>[
                 (index == 1
                     ? Text(
-                        'Net: ${this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive} per second')
+                        'Net: ${this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive} per second',
+                        style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 19, 193, 100),
+                    ))
                     : Container(width: 0.0, height: 0.0)),
-                Text((index == 0 ? '' : 'Gross: ') +
-                    '${this.game.mainCurrencies[type].passive} per second'),
+                Text(
+                    (index == 0 ? '' : 'Gross: ') +
+                        '${this.game.mainCurrencies[type].passive} per second',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 136, 14, 79),
+                    )),
               ]),
             ),
             Container(
@@ -150,7 +159,7 @@ class HomePageState extends State<HomePage> {
   Widget _purchaseUpgradeWidget(int index) {
     UpgradeModel upgrade = upgrades[index];
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -158,53 +167,66 @@ class HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
-                children: <Widget>[
-              Expanded(
-                child: Column(children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "${upgrade.title}",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "${upgrade.description} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                ]),
-              ),
               Column(children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.indigoAccent,
-                        child: Row(children: <Widget>[
-                          Text("Buy "),
-                          Text("[${game.upgrades[upgrade.type].cost.ceil()}]",
-                              style: TextStyle(fontWeight: FontWeight.bold))
-                        ]),
-                        onPressed: () => _upgradeClickPower(this.game, upgrade.type))),
-              ]),
+                Expanded(
+                  child: Column(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8.0, top: 8.0, bottom: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "${upgrade.title}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "${upgrade.description} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
+                            style:TextStyle(fontWeight: FontWeight.bold, color:Color.fromARGB(255, 19, 193, 100),),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
+                ),
+                Column(children: <Widget>[
+                  Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: RaisedButton(
+                          textColor: Colors.white,
+                          color: Colors.indigoAccent,
+                          child: Row(children: <Widget>[
+                            Text(
+                                "Buy [${game.upgrades[upgrade.type].cost.ceil()}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                            Icon(
+                              Icons.flash_on,
+                              color: Color.fromARGB(255, 136, 14, 79),
+                            ),
+                            Text(
+                              "]",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ]),
+                          onPressed: () =>
+                              _upgradeClickPower(this.game, upgrade.type))),
                 ]),
+              ]),
             ],
           ),
         ),
@@ -227,8 +249,8 @@ class UpgradeModel {
   final String description;
   final String type;
 
-  UpgradeModel(
-      this.cost, this.amount, this.multiplier, this.title, this.description, this.type);
+  UpgradeModel(this.cost, this.amount, this.multiplier, this.title,
+      this.description, this.type);
 }
 
 List<UpgradeModel> upgrades = [

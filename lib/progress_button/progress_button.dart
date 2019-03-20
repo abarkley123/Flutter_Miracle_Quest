@@ -114,10 +114,10 @@ class _ProgressButtonState extends State<ProgressButton>
           children: <Widget>[
             Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
+                padding: EdgeInsets.only(top: 16.0),
                 child: Text(
                   this.game.mainCurrencies[type].title,
-                  style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  style: TextStyle(color: Colors.white, fontSize: 24.0),
                 ),
               ),
             ]),
@@ -136,7 +136,7 @@ class _ProgressButtonState extends State<ProgressButton>
                             .incrementable
                             .toStringAsFixed(1)) +
                     " ",
-                style: TextStyle(color: Colors.white, fontSize: 20.0),
+                style: TextStyle(color: Colors.white, fontSize: 16.0),
               ),
               Icon(
                 this.type.startsWith("E") ? Icons.flash_on : Icons.person,
@@ -153,7 +153,7 @@ class _ProgressButtonState extends State<ProgressButton>
                               .incrementable
                               .toStringAsFixed(1) +
                           " ",
-                      style: TextStyle(color: Colors.white, fontSize: 20.0),
+                      style: TextStyle(color: Colors.white, fontSize: 16.0),
                     )
                   : Container(width: 0.0, height: 0.0)),
               (this.type.startsWith("E")

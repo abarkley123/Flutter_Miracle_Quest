@@ -107,9 +107,9 @@ class PurchasePageState extends State<PurchasePage> {
                         textColor: Colors.white,
                         color: Colors.indigoAccent,
                         child: Row(children: <Widget>[
-                          Text("Buy "),
-                          Text("[${currency.cost.ceil()}",
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          Text("Buy [${currency.cost.ceil()}",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16.0)),
                           Icon(
                             Icons.flash_on,
                             color: Color.fromARGB(255, 136, 14, 79),
@@ -129,9 +129,10 @@ class PurchasePageState extends State<PurchasePage> {
                           textColor: Colors.white,
                           color: Colors.indigoAccent,
                           child: Row(children: <Widget>[
-                            Text("Sell "),
-                            Text("[${currency.cost.ceil()}",
-                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text("Sell [${currency.cost.ceil()}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
                             Icon(
                               Icons.flash_on,
                               color: Color.fromARGB(255, 136, 14, 79),
@@ -185,7 +186,15 @@ class PurchasePageState extends State<PurchasePage> {
                           '+ ${currency.baseProd.ceil()} ',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Icon(Icons.supervised_user_circle, color: Colors.black)
+                        index == 1
+                            ? Icon(
+                                Icons.flash_on,
+                                color: Color.fromARGB(255, 136, 14, 79),
+                              )
+                            : Icon(
+                                Icons.person,
+                                color: Color.fromARGB(255, 19, 193, 100),
+                              ),
                       ]),
                       index == 1
                           ? Row(children: <Widget>[
@@ -194,8 +203,8 @@ class PurchasePageState extends State<PurchasePage> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Icon(
-                                Icons.flash_on,
-                                color: Color.fromARGB(255, 136, 14, 79),
+                                Icons.person,
+                                color: Color.fromARGB(255, 19, 193, 100),
                               ),
                             ])
                           : new Container(width: 0, height: 0),
@@ -225,9 +234,15 @@ class PurchasePageState extends State<PurchasePage> {
                       textColor: Colors.white,
                       color: Colors.indigoAccent,
                       child: Row(children: <Widget>[
-                        Text("Buy "),
-                        Text("[${currency.cost.ceil()}]",
-                            style: TextStyle(fontWeight: FontWeight.bold))
+                        Text("Buy [${currency.cost.ceil()}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16.0)),
+                        Icon(
+                          Icons.flash_on,
+                          color: Color.fromARGB(255, 136, 14, 79),
+                        ),
+                        Text(']',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                       ]),
                       onPressed: () => index == 1
                           ? _energyPurchase(this.game, currency)
@@ -276,7 +291,11 @@ class PurchasePageState extends State<PurchasePage> {
                         '+ ${currency.baseProd.ceil()} %',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      Icon(Icons.supervised_user_circle, color: Colors.black)
+                      index == 1 ? Icon(
+                              Icons.flash_on,
+                              color: Color.fromARGB(255, 136, 14, 79),
+                            ) : Icon(Icons.person,
+                          color: Color.fromARGB(255, 19, 193, 100))
                     ]),
                     index == 1
                         ? Row(children: <Widget>[
@@ -285,9 +304,9 @@ class PurchasePageState extends State<PurchasePage> {
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Icon(
-                              Icons.flash_on,
-                              color: Color.fromARGB(255, 136, 14, 79),
-                            ),
+                              Icons.person,
+                          color: Color.fromARGB(255, 19, 193, 100))
+                        
                           ])
                         : new Container(width: 0, height: 0),
                   ],
@@ -378,8 +397,8 @@ class Category {
 }
 
 const List<Category> categories = <Category>[
-  Category(name: 'Energy', icon: Icons.offline_bolt, index: 1),
-  Category(name: 'Followers', icon: Icons.supervised_user_circle, index: 2),
+  Category(name: 'Energy', icon: Icons.flash_on, index: 1),
+  Category(name: 'Followers', icon: Icons.person, index: 2),
 ];
 
 class CurrencyModel {

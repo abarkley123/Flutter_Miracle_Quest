@@ -235,9 +235,13 @@ class HomePageState extends State<HomePage> {
   }
 
   void _upgradeClickPower(MyGame game, type) {
-    setState(() {
-      game.upgrades[type] = game.upgradeHandler.activePurchase(game);
-    });
+    if (game.mainCurrencies["Energy"].amount >= game.upgrades[type].cost) {
+      setState(() {
+        game.upgrades[type] = game.upgradeHandler.activePurchase(game);
+      });
+    } else {
+      print("Not enough energy for upgrade.");
+    }
   }
 }
 

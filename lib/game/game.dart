@@ -37,8 +37,8 @@ class MyGame extends BaseGame {
 
   @override
   void update(double t) {
-    energy.incrementPassive(f: followers);
     followers.incrementPassive();
+    energy.incrementPassive(f: followers);
   }
 
   get mainCurrencies {

@@ -86,7 +86,6 @@ abstract class MainCurrency extends Currency {
 }
 
 class Energy extends MainCurrency {
-  
   Energy() : super() {
     this.title = "Basic Charm";
   }
@@ -114,21 +113,23 @@ class Energy extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f}) {
-    if (f.amount >
-        ((this._incrementable * this._modifier) -
-            (f.incrementable * f._modifier))) {
-      this._amount += this._incrementable * this._modifier;
-      f._amount -= (this._incrementable * this._modifier);
-    } else {
-      addMinimumAmount(f);
+    double totalIncrement = this._incrementable * this._modifier;
+    double amountToIncrement = 0;
+    if (f.amount >= totalIncrement) {
+      amountToIncrement = totalIncrement;
+    } else if (f.amount > 0) {
+      amountToIncrement = f.amount;
     }
+
+    this._amount += amountToIncrement;
+    f._amount -= amountToIncrement;
+    
 
     adjustForNegatives();
   }
 
   void addMinimumAmount(MainCurrency f) {
-    if (f._passiveIncrementable * f._modifier >=
-        (this._passiveIncrementable * this._modifier)) {
+    if (f._passiveIncrementable * f._modifier >= (this._passiveIncrementable * this._modifier)) {
       this.amount += this._passiveIncrementable * this._modifier;
     } else {
       this.amount += f._passiveIncrementable * f._modifier;

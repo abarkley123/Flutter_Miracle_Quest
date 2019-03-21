@@ -436,9 +436,9 @@ List<UpgradeModel> followerUpgrades = [
       "Followers"),
   UpgradeModel(4, 0, 5, "Bigger Amp", "Your speaker is heard by more people.",
       "Followers"),
-  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles clothed appropriately.",
+  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles now emanate mystic energy.",
       "Followers"),
-  UpgradeModel(350, 0, 100, "Fine Chianti", "Embrace the spirit of communion.",
+  UpgradeModel(350, 0, 100, "Fine Chianti", "Spread the reach of communion.",
       "Followers"),
 ];
 

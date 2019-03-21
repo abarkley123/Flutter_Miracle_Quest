@@ -58,11 +58,8 @@ class TickUpgrade extends Upgrade {
 
   TickUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
     energy.amount -= this.cost;
-    energy.active *= this.multiplier; 
-    if (followers != null) {
-      followers.active *= this.multiplier; 
-    }    
-    return new TickUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.1);
+
+    return new TickUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.2);
   }
 }
 
@@ -72,11 +69,8 @@ class CriticalUpgrade extends Upgrade {
 
   CriticalUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
     energy.amount -= this.cost;
-    energy.active *= this.multiplier; 
-    if (followers != null) {
-      followers.active *= this.multiplier; 
-    }    
-    return new CriticalUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.1);
+       
+    return new CriticalUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.25);
   }
 }
 

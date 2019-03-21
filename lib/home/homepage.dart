@@ -135,10 +135,6 @@ class HomePageState extends State<HomePage> {
 
   Widget _purchaseUpgradeWidget(int index) {
     UpgradeModel upgrade = upgrades[index];
-    print(upgrade.type);
-    print(this.game.upgrades);
-    print(this.game.upgrades["Click"].cost.toString());
-    print(this.game.upgrades[upgrade.type].cost.toString());
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Card(

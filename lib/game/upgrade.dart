@@ -131,9 +131,6 @@ class EnergyUpgrade extends Upgrade {
 
   EnergyUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
     energy.amount -= this.cost;
-    upgrade.amount++;
-    upgrade.cost = upgrade.cost*5;
-    upgrade.multiplier = upgrade.multiplier*1.1;
     return new EnergyUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
@@ -162,9 +159,6 @@ class FollowerUpgrade extends Upgrade {
 
   FollowerUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
     energy.amount -= this.cost;
-    upgrade.amount++;
-    upgrade.cost=upgrade.cost*5;
-    upgrade.multiplier=upgrade.multiplier*1.1;
     return new FollowerUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
@@ -192,6 +186,6 @@ class UpgradeHandler {
   }
 
   Upgrade passivePurchase(MyGame game, String type) {
-
+    
   }
 }

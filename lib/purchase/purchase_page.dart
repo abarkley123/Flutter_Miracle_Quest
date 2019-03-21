@@ -122,9 +122,7 @@ class PurchasePageState extends State<PurchasePage> {
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ]),
-                        onPressed: () => index == 1
-                            ? _energyPurchase(this.game, currency)
-                            : _followerPurchase(this.game, currency),
+                        onPressed: () => _purchaseItem(this.game, currency, index)
                       )),
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
@@ -268,9 +266,7 @@ class PurchasePageState extends State<PurchasePage> {
                                       TextStyle(fontWeight: FontWeight.bold)),
                             ]),
                           ]),
-                          onPressed: () => index == 1
-                              ? print('energy pressed')
-                              : print('follower pressed'),
+                          onPressed: () => _upgradeItem(this.game, currency, index)
                         ))),
               ]),
               Expanded(
@@ -342,30 +338,33 @@ class PurchasePageState extends State<PurchasePage> {
     );
   }
 
-  _followerPurchase(MyGame game, CurrencyModel purchase) {
-    if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
+  _purchaseItem(MyGame game, CurrencyModel currency, int index) {
+    String type = index == 1 ? "Energy" : "Followers";
+    if (game.mainCurrencies["Energy"].amount >= currency.cost) {
       game.ch
-          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
+          .purchasePassive(game.mainCurrencies[type], currency.baseProd);
       setState(() {
-        game.mainCurrencies["Energy"].amount -= purchase.cost;
-        purchase.amount = purchase.amount + 1;
-        purchase.cost = purchase.cost * 2.5;
-        purchase.baseProd = purchase.baseProd * 1.05;
+        game.mainCurrencies["Energy"].amount -= currency.cost;
+        currency.amount = currency.amount + 1;
+        currency.cost = currency.cost * 2.5;
+        currency.baseProd = currency.baseProd * 1.05;
       });
-      game.savePurchase(game.followerPurchases, "Followers");
+      game.savePurchase(game.followerPurchases, type);
     }
   }
 
-  _energyPurchase(MyGame game, CurrencyModel purchase) {
-    if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
-      game.ch.purchasePassive(game.mainCurrencies["Energy"], purchase.baseProd);
+  _upgradeItem(MyGame game, UpgradeModel currency, int index) {
+    if (index == 1 && game.mainCurrencies["Energy"].amount >= currency.cost) {
       setState(() {
-        game.mainCurrencies["Energy"].amount -= purchase.cost;
-        purchase.cost = purchase.cost * 2.5;
-        purchase.baseProd = purchase.baseProd * 1.05;
-        purchase.amount = purchase.amount + 1;
+        currency.cost = currency.cost * 5;
+        currency.multiplier = currency.multiplier * 1.1;
+        currency.amount = currency.amount + 1;
       });
-      game.savePurchase(game.energyPurchases, "Energy");
+      //upgrade method goes here - TODO: implement in currency.dart 
+      //we need to map an UpgradeModel to an Energy/FollowerUpgrade in that class
+
+    } else {
+      print("Insufficent currency available for purchase.");
     }
   }
 

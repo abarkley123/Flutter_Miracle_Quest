@@ -104,7 +104,6 @@ class MyGame extends BaseGame {
   }
 
   int resolveDefaultValue(int value, int defaultValue) {
-    print(value.toString() + ' ' + defaultValue.toString());
     if (value == null) return defaultValue;
     if (value <= defaultValue) {
       return defaultValue;
@@ -113,7 +112,6 @@ class MyGame extends BaseGame {
   }
 
   double resolveDefaultValueFor(double value, double defaultValue) {
-    print(value.toString() + ' ' + defaultValue.toString());
     if (value == null) return defaultValue;
     if (value <= defaultValue) {
       return defaultValue;

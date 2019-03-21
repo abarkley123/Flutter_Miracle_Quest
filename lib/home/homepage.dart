@@ -238,16 +238,16 @@ List<UpgradeModel> upgrades = [
   UpgradeModel("Luck", "Critical +", "Critical"),
 ];
 
-void miracle(MyGame game) {
+void miracle(MyGame game, {bool isCritical}) {
   if (game.mainCurrencies["Followers"].amount <= 0.0) {
   } else {
     game.ch.click(game.mainCurrencies["Energy"],
-        f: game.mainCurrencies["Followers"]);
+        f: game.mainCurrencies["Followers"], critical: isCritical);
   }
 }
 
-void followers(MyGame game) {
-  game.ch.click(game.mainCurrencies["Followers"]);
+void followers(MyGame game, {bool isCritical}) {
+  game.ch.click(game.mainCurrencies["Followers"], critical: isCritical);
 }
 
 class Category {

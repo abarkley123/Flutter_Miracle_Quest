@@ -1,3 +1,5 @@
+import 'dart:math';
+
 abstract class Mutation {
   void increment(double amount);
   void applyModifier(double amount);
@@ -45,7 +47,7 @@ abstract class MainCurrency extends Currency {
 
   void incrementPassive({Followers f});
 
-  void incrementActive({Followers f});
+  void incrementActive({Followers f, bool critical});
 
   void increasePassiveIncrement(double amount);
 
@@ -112,11 +114,18 @@ class Energy extends MainCurrency {
   }
 
   @override
-  incrementActive({MainCurrency f}) {
+  incrementActive({MainCurrency f, bool critical}) {
+    double criticalModifier = critical ? 1.0 * new Random().nextDouble() : 1.0; 
     double totalIncrement = this._incrementable * this._modifier;
     double amountToIncrement = 0;
     if (f.amount >= totalIncrement) {
-      amountToIncrement = totalIncrement;
+      if (f.amount >= (totalIncrement * criticalModifier)) {
+        amountToIncrement = totalIncrement * criticalModifier;
+      } else if (criticalModifier > 1.0) {
+        amountToIncrement = f.amount;
+      } else {
+        amountToIncrement = totalIncrement;
+      }
     } else if (f.amount > 0) {
       amountToIncrement = f.amount;
     }
@@ -154,8 +163,9 @@ class Followers extends MainCurrency {
   }
 
   @override
-  incrementActive({MainCurrency f}) {
-    this._amount += this._incrementable * this._modifier;
+  incrementActive({MainCurrency f, bool critical}) {
+    double criticalModifier = critical ? 1.0 * new Random().nextDouble() : 1.0; 
+    this._amount += this._incrementable * this._modifier * criticalModifier;
 
     adjustForNegatives();
   }
@@ -171,8 +181,8 @@ class CurrencyHandler {
     c.applyModifier(modifier);
   }
 
-  void click(MainCurrency c, {MainCurrency f}) {
-    c.incrementActive(f: f ?? c);
+  void click(MainCurrency c, {MainCurrency f, bool critical}) {
+    c.incrementActive(f: f ?? c, critical: critical);
   }
 
   void purchasePassive(MainCurrency c, double amount, {MainCurrency f}) {

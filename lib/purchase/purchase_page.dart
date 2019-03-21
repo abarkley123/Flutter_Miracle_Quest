@@ -108,7 +108,7 @@ class PurchasePageState extends State<PurchasePage> {
                         textColor: Colors.white,
                         color: Colors.indigoAccent,
                         child: Row(children: <Widget>[
-                          Text("Buy [${currency.cost.ceil()}",
+                          Text("Buy [${_toFixedString(currency.cost)}",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16.0)),
                           Icon(
@@ -130,7 +130,7 @@ class PurchasePageState extends State<PurchasePage> {
                           textColor: Colors.white,
                           color: Colors.indigoAccent,
                           child: Row(children: <Widget>[
-                            Text("Sell [${currency.cost.ceil()}",
+                            Text("Sell [${_toFixedString(currency.cost)}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0)),
@@ -186,7 +186,7 @@ class PurchasePageState extends State<PurchasePage> {
                     children: <Widget>[
                       Row(children: <Widget>[
                         Text(
-                          '+ ${currency.baseProd.ceil()} ',
+                          '+ ${_toFixedString(currency.baseProd)} ',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         index == 1
@@ -202,7 +202,7 @@ class PurchasePageState extends State<PurchasePage> {
                       index == 1
                           ? Row(children: <Widget>[
                               Text(
-                                '- ${currency.baseProd.ceil()} ',
+                                '- ${_toFixedString(currency.baseProd)} ',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Icon(
@@ -220,12 +220,16 @@ class PurchasePageState extends State<PurchasePage> {
     );
   }
 
+  String _toFixedString(double value) {
+    return value % 1 == 0 ? value.floor().toString() : value.toStringAsFixed(1);
+  }
+
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
     UpgradeModel currency = index == 1
         ? purchaseUpgrades[currencyNum]
         : followerUpgrades[currencyNum];
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
+      margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
       child: Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -247,7 +251,7 @@ class PurchasePageState extends State<PurchasePage> {
                                     fontSize: 16.0)),
                             Row(children: <Widget>[
                               Text(
-                                '[${currency.cost.ceil()}',
+                                '[${_toFixedString(currency.cost)}',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0),
@@ -304,7 +308,7 @@ class PurchasePageState extends State<PurchasePage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       Text(
-                        '+ ${currency.multiplier.ceil()} %',
+                        '+ ${_toFixedString(currency.multiplier)} %',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       index == 1
@@ -318,7 +322,7 @@ class PurchasePageState extends State<PurchasePage> {
                     index == 1
                         ? Row(children: <Widget>[
                             Text(
-                              '- ${currency.multiplier.ceil()} %',
+                              '- ${_toFixedString(currency.multiplier)} %',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Icon(Icons.person,
@@ -342,7 +346,7 @@ class PurchasePageState extends State<PurchasePage> {
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
         purchase.amount++;
-        purchase.cost = purchase.cost * 5;
+        purchase.cost = purchase.cost * 2.5;
         purchase.baseProd = purchase.baseProd * 1.05;
         purchase.amount++;
       });
@@ -355,7 +359,7 @@ class PurchasePageState extends State<PurchasePage> {
       game.ch.purchasePassive(game.mainCurrencies["Energy"], purchase.baseProd);
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
-        purchase.cost = purchase.cost * 5;
+        purchase.cost = purchase.cost * 2.5;
         purchase.baseProd = purchase.baseProd * 1.05;
         purchase.amount++;
       });
@@ -365,17 +369,17 @@ class PurchasePageState extends State<PurchasePage> {
 
   _sellItem(MyGame game, CurrencyModel currency, int index) {
     if (currency.amount >= 1) {
-      setState(() {
-        currency.amount--;
-      });
       if (index == 1) {
-        game.ch.sellPassive(game.mainCurrencies["Energy"], currency.baseProd);
+        game.ch.sellPassive(game.mainCurrencies["Energy"], currency);
         game.savePurchase(purchases, "Energy");
       } else if (index == 2) {
         game.ch
-            .sellPassive(game.mainCurrencies["Followers"], currency.baseProd);
+            .sellPassive(game.mainCurrencies["Followers"], currency);
         game.savePurchase(followers, "Followers");
       }
+      setState(() {
+        currency.amount--;
+      });
     }
   }
 }

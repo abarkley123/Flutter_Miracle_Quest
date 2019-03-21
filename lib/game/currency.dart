@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../purchase/purchase_logic.dart';
 
 abstract class Mutation {
   void increment(double amount);
@@ -177,6 +178,7 @@ class Followers extends MainCurrency {
 }
 
 class CurrencyHandler {
+
   void processModifierUpdate(Currency c, double modifier) {
     c.applyModifier(modifier);
   }
@@ -189,8 +191,10 @@ class CurrencyHandler {
     c.increasePassiveIncrement(amount);
   }
 
-  void sellPassive(MainCurrency c, double amount, {MainCurrency f}) {
-    c.increasePassiveIncrement(-amount);
+  void sellPassive(MainCurrency c, CurrencyModel currency, {MainCurrency f}) {
+    currency.cost = currency.cost / 2.5;
+    currency.baseProd = currency.baseProd / 1.05;
+    c.increasePassiveIncrement(-currency.cost);
   }
 }
 // other currencies to come - flame, perk points etc.

@@ -141,13 +141,13 @@ class MyGame extends BaseGame {
 ];
 
 List<UpgradeModel> followerUpgrades = [
-  UpgradeModel(1, 0, 1, "New Writer ", "Articles published are higher quality.",
+  UpgradeModel(100, 0, 1.5, "New Writer ", "Articles published are higher quality.",
       "Followers"),
-  UpgradeModel(4, 0, 5, "Bigger Amp", "Your speaker is heard by more people.",
+  UpgradeModel(2000, 0, 1.5, "Bigger Amp", "Your speaker is heard by more people.",
       "Followers"),
-  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles now emanate mystic energy.",
+  UpgradeModel(30000, 0, 1.5, "Divine Robes", "The apostles now emanate mystic energy.",
       "Followers"),
-  UpgradeModel(350, 0, 100, "Fine Chianti", "Spread the reach of communion.",
+  UpgradeModel(750000, 0, 1.5, "Fine Chianti", "Spread the reach of communion.",
       "Followers"),
 ];
 
@@ -159,13 +159,12 @@ List<CurrencyModel> energyPurchases = [
 ];
 
 List<UpgradeModel> purchaseUpgrades = [
-  UpgradeModel(1, 0, 1, "Laminated pages ", "Make your Newspaper more premium.",
+  UpgradeModel(100, 0, 1.5, "Laminated pages ", "Make your Newspaper more premium.",
       "Energy"),
-  UpgradeModel(
-      4, 0, 5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
-  UpgradeModel(40, 0, 20, "Gilded Furniture",
+  UpgradeModel(2500, 0, 1.5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
+  UpgradeModel(50000, 0, 1.5, "Gilded Furniture",
       "Allow your followers more luxury.", "Energy"),
-  UpgradeModel(350, 0, 100, "Holy Scripture",
+  UpgradeModel(1000000, 0, 1.5, "Holy Scripture",
       "Your word is spread more easily.", "Energy"),
 ];
 }

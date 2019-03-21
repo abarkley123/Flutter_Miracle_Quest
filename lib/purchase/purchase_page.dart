@@ -251,7 +251,7 @@ class PurchasePageState extends State<PurchasePage> {
                             Text("Upgrade",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 16.0)),
+                                    fontSize: 22.0)),
                             Row(children: <Widget>[
                               Text(
                                 '[${_toFixedString(currency.cost)}',
@@ -311,7 +311,7 @@ class PurchasePageState extends State<PurchasePage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       Text(
-                        '+ ${_toFixedString(currency.multiplier)} %',
+                        '+ ${_toFixedString(100 * (currency.multiplier - 1))} %',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       index == 1
@@ -325,7 +325,7 @@ class PurchasePageState extends State<PurchasePage> {
                     index == 1
                         ? Row(children: <Widget>[
                             Text(
-                              '- ${_toFixedString(currency.multiplier)} %',
+                              '- ${_toFixedString(100 * (currency.multiplier - 1))} %',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Icon(Icons.person,

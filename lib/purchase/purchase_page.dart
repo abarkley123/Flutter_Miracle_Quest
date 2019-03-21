@@ -147,14 +147,16 @@ class PurchasePageState extends State<PurchasePage> {
                 Expanded(
                   child: Column(children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0, top: 20.0, bottom: 4.0),
+                      padding: const EdgeInsets.only(
+                          left: 8.0, top: 20.0, bottom: 4.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             currency.title,
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16.0),
                             textAlign: TextAlign.left,
                           ),
                         ],
@@ -218,8 +220,9 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
-    CurrencyModel currency =
-        index == 1 ? purchases[currencyNum] : followers[currencyNum];
+    UpgradeModel currency = index == 1
+        ? purchaseUpgrades[currencyNum]
+        : followerUpgrades[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
       child: Card(
@@ -230,24 +233,37 @@ class PurchasePageState extends State<PurchasePage> {
               Column(children: <Widget>[
                 Padding(
                     padding: const EdgeInsets.only(right: 16.0, top: 8.0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Colors.indigoAccent,
-                      child: Row(children: <Widget>[
-                        Text("Buy [${currency.cost.ceil()}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16.0)),
-                        Icon(
-                          Icons.flash_on,
-                          color: Color.fromARGB(255, 136, 14, 79),
-                        ),
-                        Text(']',
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                      ]),
-                      onPressed: () => index == 1
-                          ? _energyPurchase(this.game, currency)
-                          : _followerPurchase(this.game, currency),
-                    )),
+                    child: ButtonTheme(
+                        height: 100.0,
+                        minWidth: 100.0,
+                        child: RaisedButton(
+                          textColor: Colors.white,
+                          color: Colors.indigoAccent,
+                          child: Column(children: <Widget>[
+                            Text("Upgrade",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                            Row(children: <Widget>[
+                              Text(
+                                '[${currency.cost.ceil()}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0),
+                              ),
+                              Icon(
+                                Icons.flash_on,
+                                color: Color.fromARGB(255, 136, 14, 79),
+                              ),
+                              Text(']',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                            ]),
+                          ]),
+                          onPressed: () => index == 1
+                              ? print('energy pressed')
+                              : print('follower pressed'),
+                        ))),
               ]),
               Expanded(
                 child: Column(children: <Widget>[
@@ -258,22 +274,18 @@ class PurchasePageState extends State<PurchasePage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Upgrade",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.left,
+                          currency.title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18.0),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Own ${currency.amount}",
-                          textAlign: TextAlign.left,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            currency.description,
+                            style: TextStyle(fontSize: 16.0),
+                            textAlign: TextAlign.left,
+                          ),
                         ),
                       ],
                     ),
@@ -288,25 +300,25 @@ class PurchasePageState extends State<PurchasePage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       Text(
-                        '+ ${currency.baseProd.ceil()} %',
+                        '+ ${currency.multiplier.ceil()} %',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      index == 1 ? Icon(
+                      index == 1
+                          ? Icon(
                               Icons.flash_on,
                               color: Color.fromARGB(255, 136, 14, 79),
-                            ) : Icon(Icons.person,
-                          color: Color.fromARGB(255, 19, 193, 100))
+                            )
+                          : Icon(Icons.person,
+                              color: Color.fromARGB(255, 19, 193, 100))
                     ]),
                     index == 1
                         ? Row(children: <Widget>[
                             Text(
-                              '- ${currency.baseProd.ceil()} %',
+                              '- ${currency.multiplier.ceil()} %',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            Icon(
-                              Icons.person,
-                          color: Color.fromARGB(255, 19, 193, 100))
-                        
+                            Icon(Icons.person,
+                                color: Color.fromARGB(255, 19, 193, 100))
                           ])
                         : new Container(width: 0, height: 0),
                   ],
@@ -419,11 +431,33 @@ List<CurrencyModel> followers = [
   CurrencyModel(350, 0, 100, "Communion", "4"),
 ];
 
+List<UpgradeModel> followerUpgrades = [
+  UpgradeModel(1, 0, 1, "New Writer ", "Articles published are higher quality.",
+      "Followers"),
+  UpgradeModel(4, 0, 5, "Bigger Amp", "Your speaker is heard by more people.",
+      "Followers"),
+  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles clothed appropriately.",
+      "Followers"),
+  UpgradeModel(350, 0, 100, "Fine Chianti", "Embrace the spirit of communion.",
+      "Followers"),
+];
+
 List<CurrencyModel> purchases = [
-  CurrencyModel(1, 0, 1, "Newspaper ", "1"),
+  CurrencyModel(1, 0, 1, "Newspaper", "1"),
   CurrencyModel(10, 0, 5, "Intern", "2"),
   CurrencyModel(50, 0, 20, "Shrine", "3"),
   CurrencyModel(500, 0, 100, "Temple", "4"),
+];
+
+List<UpgradeModel> purchaseUpgrades = [
+  UpgradeModel(1, 0, 1, "Laminated pages ", "Make your Newspaper more premium.",
+      "Energy"),
+  UpgradeModel(
+      4, 0, 5, "Extra Coffee", "Improve your Intern's productivity.", "Energy"),
+  UpgradeModel(40, 0, 20, "Gilded Furniture",
+      "Allow your followers more luxury.", "Energy"),
+  UpgradeModel(350, 0, 100, "Holy Scripture",
+      "Your word is spread more easily.", "Energy"),
 ];
 
 void setCurrencyValue(MyGame game, String currencyType) {
@@ -439,4 +473,16 @@ void setValues(MyGame game, List<CurrencyModel> currency, String currencyType) {
     currency[i].amount =
         game.prefs.getInt(currencyType + i.toString() + "Amount") ?? 0;
   }
+}
+
+class UpgradeModel {
+  double cost;
+  int amount;
+  final double multiplier;
+  final String title;
+  final String description;
+  final String type;
+
+  UpgradeModel(this.cost, this.amount, this.multiplier, this.title,
+      this.description, this.type);
 }

@@ -337,26 +337,29 @@ class PurchasePageState extends State<PurchasePage> {
 
   _followerPurchase(MyGame game, CurrencyModel purchase) {
     if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
+      game.ch
+          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
         purchase.amount++;
+        purchase.cost = purchase.cost * 5;
+        purchase.baseProd = purchase.baseProd * 1.05;
+        purchase.amount++;
       });
-      game.ch
-          .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
-      game.saveFollowerPurchase(followers[0].amount, followers[1].amount,
-          followers[2].amount, followers[3].amount);
+      game.savePurchase(followers, "Followers");
     }
   }
 
   _energyPurchase(MyGame game, CurrencyModel purchase) {
     if (game.mainCurrencies["Energy"].amount >= purchase.cost) {
+      game.ch.purchasePassive(game.mainCurrencies["Energy"], purchase.baseProd);
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
+        purchase.cost = purchase.cost * 5;
+        purchase.baseProd = purchase.baseProd * 1.05;
         purchase.amount++;
       });
-      game.ch.purchasePassive(game.mainCurrencies["Energy"], purchase.baseProd);
-      game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
-          purchases[2].amount, purchases[3].amount);
+      game.savePurchase(purchases, "Energy");
     }
   }
 
@@ -367,13 +370,11 @@ class PurchasePageState extends State<PurchasePage> {
       });
       if (index == 1) {
         game.ch.sellPassive(game.mainCurrencies["Energy"], currency.baseProd);
-        game.saveEnergyPurchase(purchases[0].amount, purchases[1].amount,
-            purchases[2].amount, purchases[3].amount);
+        game.savePurchase(purchases, "Energy");
       } else if (index == 2) {
         game.ch
             .sellPassive(game.mainCurrencies["Followers"], currency.baseProd);
-        game.saveFollowerPurchase(purchases[0].amount, purchases[1].amount,
-            purchases[2].amount, purchases[3].amount);
+        game.savePurchase(followers, "Followers");
       }
     }
   }

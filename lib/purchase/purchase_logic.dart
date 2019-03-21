@@ -85,7 +85,7 @@ List<UpgradeModel> purchaseUpgrades = [
 ];
 
 void setCurrencyValue(MyGame game, String currencyType) {
-  if (currencyType == "Follower") {
+  if (currencyType == "Followers") {
     setValues(game, followers, currencyType);
   } else if (currencyType == "Energy") {
     setValues(game, purchases, currencyType);

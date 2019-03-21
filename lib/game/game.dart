@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'currency.dart';
 import '../main.dart';
 import 'upgrade.dart';
+import '../purchase/purchase_logic.dart';
 
 class MyGame extends BaseGame {
   final prefs;
@@ -56,18 +57,10 @@ class MyGame extends BaseGame {
     prefs.setDouble("FollowersPassive", followers.passive);
   }
 
-  saveEnergyPurchase(int value1, int value2, int value3, int value4) {
-    prefs.setInt("Energy0Amount", value1);
-    prefs.setInt("Energy1Amount", value2);
-    prefs.setInt("Energy2Amount", value3);
-    prefs.setInt("Energy3Amount", value4);
-  }
-
-  saveFollowerPurchase(int value1, int value2, int value3, int value4) {
-    prefs.setInt("Follower0Amount", value1);
-    prefs.setInt("Follower1Amount", value2);
-    prefs.setInt("Follower2Amount", value3);
-    prefs.setInt("Follower3Amount", value4);
+  savePurchase(List<CurrencyModel> purchases, String type) {
+    for (int i = 0; i < purchases.length; i++) {
+      prefs.setInt(type + i.toString() + "Amount", purchases[i].amount);
+    }
   }
 
   loadData() {
@@ -89,7 +82,8 @@ class MyGame extends BaseGame {
     _upgrades.forEach((k, v) {
       v.cost = resolveDefaultValueFor(prefs.getDouble(k + 'cost'), v.cost);
       v.amount = resolveDefaultValue(prefs.getInt(k + 'amount'), v.amount);
-      v.multiplier = resolveDefaultValueFor(prefs.getDouble(k + 'multiplier'), v.multiplier);
+      v.multiplier = resolveDefaultValueFor(
+          prefs.getDouble(k + 'multiplier'), v.multiplier);
     });
   }
 
@@ -100,7 +94,7 @@ class MyGame extends BaseGame {
 
   loadActive() {
     energy.active = prefs.getDouble("EnergyActive") ?? 1;
-    followers.active = prefs.getDouble("FollowersActive") ?? 1;    
+    followers.active = prefs.getDouble("FollowersActive") ?? 1;
   }
 
   int resolveDefaultValue(int value, int defaultValue) {
@@ -123,5 +117,17 @@ class MyGame extends BaseGame {
     await prefs.clear();
     _mainCurrencies.forEach((key, value) => value.reset());
     _upgrades.forEach((key, value) => value.reset());
+  }
+
+  void doMiracle(MyGame game, {bool isCritical}) {
+    if (game.mainCurrencies["Followers"].amount <= 0.0) {
+    } else {
+      game.ch.click(game.mainCurrencies["Energy"],
+          f: game.mainCurrencies["Followers"], critical: isCritical);
+    }
+  }
+
+  void doAscension(MyGame game, {bool isCritical}) {
+    game.ch.click(game.mainCurrencies["Followers"], critical: isCritical);
   }
 }

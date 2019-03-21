@@ -130,14 +130,14 @@ class EnergyUpgrade extends Upgrade {
   EnergyUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
   EnergyUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
-    energy.amount -= this.cost;
+    energy.amount -= this.cost;  
     return new EnergyUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
   @override
   get multiplier {
     if (this.amount <= 0) {
-      return 1.05;
+      return 1.5;
     } else {
       return this.baseMultiplier * (pow(1.1, this.amount));
     }
@@ -147,7 +147,7 @@ class EnergyUpgrade extends Upgrade {
   void reset() {
     super.reset();
     this.cost = 100;
-    this.multiplier = 1.05;
+    this.multiplier = 1.5;
   }
 }
 
@@ -165,7 +165,7 @@ class FollowerUpgrade extends Upgrade {
   @override
   get multiplier {
     if (this.amount <= 0) {
-      return 1.05;
+      return 1.5;
     } else {
       return this.baseMultiplier * (pow(1.1, this.amount));
     }
@@ -175,7 +175,7 @@ class FollowerUpgrade extends Upgrade {
   void reset() {
     super.reset();
     this.cost = 100;
-    this.multiplier = 1.05;
+    this.multiplier = 1.5;
   }
 }
 
@@ -185,7 +185,7 @@ class UpgradeHandler {
     return game.upgrades[type].purchase(game.mainCurrencies["Energy"], followers: game.mainCurrencies["Followers"]);
   }
 
-  Upgrade passivePurchase(MyGame game, String type) {
-    
+  void passivePurchase(MyGame game, Upgrade upgrade) {
+    upgrade.purchase(game.mainCurrencies["Energy"], followers: game.mainCurrencies["Followers"]); 
   }
 }

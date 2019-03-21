@@ -140,17 +140,6 @@ class MyGame extends BaseGame {
   CurrencyModel(350, 0, 100, "Communion", "4"),
 ];
 
-List<UpgradeModel> followerUpgrades = [
-  UpgradeModel(100, 0, 1.5, "New Writer ", "Articles published are higher quality.",
-      "Followers"),
-  UpgradeModel(2000, 0, 1.5, "Bigger Amp", "Your speaker is heard by more people.",
-      "Followers"),
-  UpgradeModel(30000, 0, 1.5, "Divine Robes", "The apostles now emanate mystic energy.",
-      "Followers"),
-  UpgradeModel(750000, 0, 1.5, "Fine Chianti", "Spread the reach of communion.",
-      "Followers"),
-];
-
 List<CurrencyModel> energyPurchases = [
   CurrencyModel(1, 0, 1, "Newspaper", "1"),
   CurrencyModel(10, 0, 5, "Intern", "2"),
@@ -158,13 +147,17 @@ List<CurrencyModel> energyPurchases = [
   CurrencyModel(500, 0, 100, "Temple", "4"),
 ];
 
-List<UpgradeModel> purchaseUpgrades = [
-  UpgradeModel(100, 0, 1.5, "Laminated pages ", "Make your Newspaper more premium.",
-      "Energy"),
-  UpgradeModel(2500, 0, 1.5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
-  UpgradeModel(50000, 0, 1.5, "Gilded Furniture",
-      "Allow your followers more luxury.", "Energy"),
-  UpgradeModel(1000000, 0, 1.5, "Holy Scripture",
-      "Your word is spread more easily.", "Energy"),
+List<EnergyUpgrade> purchaseUpgrades = [
+  EnergyUpgrade(100, 0, 1.5),
+  EnergyUpgrade(2500, 0, 1.5),
+  EnergyUpgrade(50000, 0, 1.5),
+  EnergyUpgrade(1000000, 0, 1.5),
+];
+
+List<FollowerUpgrade> followerUpgrades = [
+  FollowerUpgrade(100, 0, 1.5),
+  FollowerUpgrade(2000, 0, 1.5),
+  FollowerUpgrade(30000, 0, 1.5),
+  FollowerUpgrade(750000, 0, 1.5),
 ];
 }

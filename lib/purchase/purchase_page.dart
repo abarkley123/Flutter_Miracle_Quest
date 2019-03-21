@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../game/game.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'purchase_logic.dart';
+import '../util/util.dart';
+import '../game/upgrade.dart';
 
 class PurchasePage extends StatefulWidget {
   final MyGame game;
@@ -222,13 +224,16 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   String _toFixedString(double value) {
-    return value % 1 == 0 ? value.floor().toString() : value.toStringAsFixed(1);
+    return value % 1 == 0 && value < 1000 ? value.floor().toString() : truncateBigValue(value);
   }
 
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
-    UpgradeModel currency = index == 1
+    Upgrade currency = index == 1
         ? this.game.purchaseUpgrades[currencyNum]
         : this.game.followerUpgrades[currencyNum];
+    UpgradeModel upgradeModel = index == 1
+        ? purchaseUpgradeModels[currencyNum]
+        : followerUpgradeModels[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
       child: Card(
@@ -238,9 +243,9 @@ class PurchasePageState extends State<PurchasePage> {
             children: <Widget>[
               Column(children: <Widget>[
                 Padding(
-                    padding: const EdgeInsets.only(right: 16.0, top: 8.0),
+                    padding: const EdgeInsets.only(right: 16.0, top: 16.0),
                     child: ButtonTheme(
-                        height: 100.0,
+                        height: 80.0,
                         minWidth: 100.0,
                         child: RaisedButton(
                           textColor: Colors.white,
@@ -272,7 +277,7 @@ class PurchasePageState extends State<PurchasePage> {
               Expanded(
                 child: Column(children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                    padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -280,7 +285,7 @@ class PurchasePageState extends State<PurchasePage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            currency.title,
+                            upgradeModel.title,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18.0),
                             textAlign: TextAlign.right,
@@ -289,7 +294,7 @@ class PurchasePageState extends State<PurchasePage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            currency.description,
+                            upgradeModel.description,
                             style: TextStyle(fontSize: 16.0),
                             textAlign: TextAlign.center,
                           ),
@@ -353,16 +358,14 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 
-  _upgradeItem(MyGame game, UpgradeModel currency, int index) {
-    if (index == 1 && game.mainCurrencies["Energy"].amount >= currency.cost) {
+  _upgradeItem(MyGame game, Upgrade upgrade, int index) {
+    if (index == 1 && game.mainCurrencies["Energy"].amount >= upgrade.cost) {
+      game.upgradeHandler.passivePurchase(game, upgrade);
       setState(() {
-        currency.cost = currency.cost * 5;
-        currency.multiplier = currency.multiplier * 1.1;
-        currency.amount = currency.amount + 1;
+        upgrade.cost = upgrade.cost * 5;
+        upgrade.multiplier = upgrade.multiplier * 1.1;
+        upgrade.amount = upgrade.amount + 1;
       });
-      //upgrade method goes here - TODO: implement in currency.dart 
-      //we need to map an UpgradeModel to an Energy/FollowerUpgrade in that class
-
     } else {
       print("Insufficent currency available for purchase.");
     }
@@ -410,3 +413,25 @@ class CategoryCard extends StatelessWidget {
     );
   }
 }
+
+List<UpgradeModel> purchaseUpgradeModels = [
+  UpgradeModel(100, 0, 1.5, "Laminated pages ", "Make your Newspaper more premium.",
+      "Energy"),
+  UpgradeModel(2500, 0, 1.5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
+  UpgradeModel(50000, 0, 1.5, "Gilded Furniture",
+      "Allow your followers more luxury.", "Energy"),
+  UpgradeModel(1000000, 0, 1.5, "Holy Scripture",
+      "Your word is spread more easily.", "Energy"),
+];
+
+
+List<UpgradeModel> followerUpgradeModels = [
+  UpgradeModel(100, 0, 1.5, "New Writer ", "Articles published are higher quality.",
+      "Followers"),
+  UpgradeModel(2000, 0, 1.5, "Bigger Amp", "Your speaker is heard by more people.",
+      "Followers"),
+  UpgradeModel(30000, 0, 1.5, "Divine Robes", "The apostles now emanate mystic energy.",
+      "Followers"),
+  UpgradeModel(750000, 0, 1.5, "Fine Chianti", "Spread the reach of communion.",
+      "Followers"),
+];

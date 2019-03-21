@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'purchase_logic.dart';
 
 class PurchasePage extends StatefulWidget {
   final MyGame game;
@@ -273,18 +274,21 @@ class PurchasePageState extends State<PurchasePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          currency.title,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18.0),
-                          textAlign: TextAlign.center,
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            currency.title,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0),
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
                             currency.description,
                             style: TextStyle(fontSize: 16.0),
-                            textAlign: TextAlign.left,
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
@@ -357,7 +361,6 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   _sellItem(MyGame game, CurrencyModel currency, int index) {
-    print(index);
     if (currency.amount >= 1) {
       setState(() {
         currency.amount--;
@@ -399,90 +402,4 @@ class CategoryCard extends StatelessWidget {
       ),
     );
   }
-}
-
-class Category {
-  const Category({this.name, this.icon, this.index});
-  final String name;
-  final IconData icon;
-  final int index;
-}
-
-const List<Category> categories = <Category>[
-  Category(name: 'Energy', icon: Icons.flash_on, index: 1),
-  Category(name: 'Followers', icon: Icons.person, index: 2),
-];
-
-class CurrencyModel {
-  double cost;
-  int amount;
-  final double baseProd;
-  final String title;
-  final String description;
-
-  CurrencyModel(
-      this.cost, this.amount, this.baseProd, this.title, this.description);
-}
-
-List<CurrencyModel> followers = [
-  CurrencyModel(1, 0, 1, "Articles ", "1"),
-  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
-  CurrencyModel(40, 0, 20, "Apostles", "3"),
-  CurrencyModel(350, 0, 100, "Communion", "4"),
-];
-
-List<UpgradeModel> followerUpgrades = [
-  UpgradeModel(1, 0, 1, "New Writer ", "Articles published are higher quality.",
-      "Followers"),
-  UpgradeModel(4, 0, 5, "Bigger Amp", "Your speaker is heard by more people.",
-      "Followers"),
-  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles now emanate mystic energy.",
-      "Followers"),
-  UpgradeModel(350, 0, 100, "Fine Chianti", "Spread the reach of communion.",
-      "Followers"),
-];
-
-List<CurrencyModel> purchases = [
-  CurrencyModel(1, 0, 1, "Newspaper", "1"),
-  CurrencyModel(10, 0, 5, "Intern", "2"),
-  CurrencyModel(50, 0, 20, "Shrine", "3"),
-  CurrencyModel(500, 0, 100, "Temple", "4"),
-];
-
-List<UpgradeModel> purchaseUpgrades = [
-  UpgradeModel(1, 0, 1, "Laminated pages ", "Make your Newspaper more premium.",
-      "Energy"),
-  UpgradeModel(
-      4, 0, 5, "Extra Coffee", "Improve your Intern's productivity.", "Energy"),
-  UpgradeModel(40, 0, 20, "Gilded Furniture",
-      "Allow your followers more luxury.", "Energy"),
-  UpgradeModel(350, 0, 100, "Holy Scripture",
-      "Your word is spread more easily.", "Energy"),
-];
-
-void setCurrencyValue(MyGame game, String currencyType) {
-  if (currencyType == "Follower") {
-    setValues(game, followers, currencyType);
-  } else if (currencyType == "Energy") {
-    setValues(game, purchases, currencyType);
-  }
-}
-
-void setValues(MyGame game, List<CurrencyModel> currency, String currencyType) {
-  for (int i = 0; i < currency.length; i++) {
-    currency[i].amount =
-        game.prefs.getInt(currencyType + i.toString() + "Amount") ?? 0;
-  }
-}
-
-class UpgradeModel {
-  double cost;
-  int amount;
-  final double multiplier;
-  final String title;
-  final String description;
-  final String type;
-
-  UpgradeModel(this.cost, this.amount, this.multiplier, this.title,
-      this.description, this.type);
 }

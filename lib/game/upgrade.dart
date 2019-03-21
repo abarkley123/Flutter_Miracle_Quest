@@ -1,6 +1,7 @@
 import 'currency.dart';
 import 'game.dart';
 import 'dart:math';
+import '../purchase/purchase_logic.dart';
 
 abstract class Upgrader {
   void purchase(MainCurrency energy, {MainCurrency followers});
@@ -122,9 +123,75 @@ class CriticalUpgrade extends Upgrade {
   }
 }
 
+class EnergyUpgrade extends Upgrade {
+
+  double baseMultiplier = 1.5;
+
+  EnergyUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
+
+  EnergyUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
+    energy.amount -= this.cost;
+    upgrade.amount++;
+    upgrade.cost = upgrade.cost*5;
+    upgrade.multiplier = upgrade.multiplier*1.1;
+    return new EnergyUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
+  }
+
+  @override
+  get multiplier {
+    if (this.amount <= 0) {
+      return 1.05;
+    } else {
+      return this.baseMultiplier * (pow(1.1, this.amount));
+    }
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    this.cost = 100;
+    this.multiplier = 1.05;
+  }
+}
+
+class FollowerUpgrade extends Upgrade {
+
+  double baseMultiplier = 1.5;
+
+  FollowerUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
+
+  FollowerUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
+    energy.amount -= this.cost;
+    upgrade.amount++;
+    upgrade.cost=upgrade.cost*5;
+    upgrade.multiplier=upgrade.multiplier*1.1;
+    return new FollowerUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
+  }
+
+  @override
+  get multiplier {
+    if (this.amount <= 0) {
+      return 1.05;
+    } else {
+      return this.baseMultiplier * (pow(1.1, this.amount));
+    }
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    this.cost = 100;
+    this.multiplier = 1.05;
+  }
+}
+
 class UpgradeHandler {
 
   Upgrade activePurchase(MyGame game, String type) {
     return game.upgrades[type].purchase(game.mainCurrencies["Energy"], followers: game.mainCurrencies["Followers"]);
+  }
+
+  Upgrade passivePurchase(MyGame game, String type) {
+
   }
 }

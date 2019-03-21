@@ -63,8 +63,9 @@ class PurchasePageState extends State<PurchasePage> {
         Expanded(
           child: ListView.builder(
               shrinkWrap: true,
-              itemCount:
-                  choice.index == 1 ? purchases.length : followers.length,
+              itemCount: choice.index == 1
+                  ? game.energyPurchases.length
+                  : game.followerPurchases.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                     color: Color(0xFFecf2f9),
@@ -91,8 +92,9 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   Widget _currencySpecificWidget(int index, int currencyNum) {
-    CurrencyModel currency =
-        index == 1 ? purchases[currencyNum] : followers[currencyNum];
+    CurrencyModel currency = index == 1
+        ? game.energyPurchases[currencyNum]
+        : game.followerPurchases[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
       child: Card(
@@ -130,7 +132,8 @@ class PurchasePageState extends State<PurchasePage> {
                           textColor: Colors.white,
                           color: Colors.indigoAccent,
                           child: Row(children: <Widget>[
-                            Text("Sell [${_toFixedString(currency.cost)}",
+                            Text(
+                                "Sell [${_toFixedString(currency.startingCost == currency.cost ? 0 : currency.cost / 2.5)}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16.0)),
@@ -226,8 +229,8 @@ class PurchasePageState extends State<PurchasePage> {
 
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
     UpgradeModel currency = index == 1
-        ? purchaseUpgrades[currencyNum]
-        : followerUpgrades[currencyNum];
+        ? this.game.purchaseUpgrades[currencyNum]
+        : this.game.followerUpgrades[currencyNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
       child: Card(
@@ -345,12 +348,11 @@ class PurchasePageState extends State<PurchasePage> {
           .purchasePassive(game.mainCurrencies["Followers"], purchase.baseProd);
       setState(() {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
-        purchase.amount++;
+        purchase.amount = purchase.amount + 1;
         purchase.cost = purchase.cost * 2.5;
         purchase.baseProd = purchase.baseProd * 1.05;
-        purchase.amount++;
       });
-      game.savePurchase(followers, "Followers");
+      game.savePurchase(game.followerPurchases, "Followers");
     }
   }
 
@@ -361,25 +363,26 @@ class PurchasePageState extends State<PurchasePage> {
         game.mainCurrencies["Energy"].amount -= purchase.cost;
         purchase.cost = purchase.cost * 2.5;
         purchase.baseProd = purchase.baseProd * 1.05;
-        purchase.amount++;
+        purchase.amount = purchase.amount + 1;
       });
-      game.savePurchase(purchases, "Energy");
+      game.savePurchase(game.energyPurchases, "Energy");
     }
   }
 
   _sellItem(MyGame game, CurrencyModel currency, int index) {
     if (currency.amount >= 1) {
+      setState(() {
+        currency.cost = currency.cost / 2.5;
+        currency.baseProd = currency.baseProd / 1.05;
+        currency.amount = currency.amount - 1;
+      });
       if (index == 1) {
         game.ch.sellPassive(game.mainCurrencies["Energy"], currency);
-        game.savePurchase(purchases, "Energy");
+        game.savePurchase(game.energyPurchases, "Energy");
       } else if (index == 2) {
-        game.ch
-            .sellPassive(game.mainCurrencies["Followers"], currency);
-        game.savePurchase(followers, "Followers");
+        game.ch.sellPassive(game.mainCurrencies["Followers"], currency);
+        game.savePurchase(game.followerPurchases, "Followers");
       }
-      setState(() {
-        currency.amount--;
-      });
     }
   }
 }

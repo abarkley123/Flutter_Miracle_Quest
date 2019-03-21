@@ -192,9 +192,7 @@ class CurrencyHandler {
   }
 
   void sellPassive(MainCurrency c, CurrencyModel currency, {MainCurrency f}) {
-    currency.cost = currency.cost / 2.5;
-    currency.baseProd = currency.baseProd / 1.05;
-    c.increasePassiveIncrement(-currency.cost);
+    c.increasePassiveIncrement(-currency.baseProd);
   }
 }
 // other currencies to come - flame, perk points etc.

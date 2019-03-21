@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
                     : Container(width: 0.0, height: 0.0)),
                 Text(
                     (index == 0 ? '' : 'Gross: ') +
-                        '${this.game.mainCurrencies[type].passive} per second',
+                        '${this.game.mainCurrencies[type].passive.toStringAsFixed(1)} per second',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

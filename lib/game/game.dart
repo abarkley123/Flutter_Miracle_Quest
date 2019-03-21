@@ -117,6 +117,8 @@ class MyGame extends BaseGame {
     await prefs.clear();
     _mainCurrencies.forEach((key, value) => value.reset());
     _upgrades.forEach((key, value) => value.reset());
+    energyPurchases.forEach((purchase) => purchase.reset());
+    followerPurchases.forEach((purchase) => purchase.reset());
   }
 
   void doMiracle(MyGame game, {bool isCritical}) {
@@ -130,4 +132,40 @@ class MyGame extends BaseGame {
   void doAscension(MyGame game, {bool isCritical}) {
     game.ch.click(game.mainCurrencies["Followers"], critical: isCritical);
   }
+
+  List<CurrencyModel> followerPurchases = [
+  CurrencyModel(1, 0, 1, "Articles ", "1"),
+  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
+  CurrencyModel(40, 0, 20, "Apostles", "3"),
+  CurrencyModel(350, 0, 100, "Communion", "4"),
+];
+
+List<UpgradeModel> followerUpgrades = [
+  UpgradeModel(1, 0, 1, "New Writer ", "Articles published are higher quality.",
+      "Followers"),
+  UpgradeModel(4, 0, 5, "Bigger Amp", "Your speaker is heard by more people.",
+      "Followers"),
+  UpgradeModel(40, 0, 20, "Divine Robes", "The apostles now emanate mystic energy.",
+      "Followers"),
+  UpgradeModel(350, 0, 100, "Fine Chianti", "Spread the reach of communion.",
+      "Followers"),
+];
+
+List<CurrencyModel> energyPurchases = [
+  CurrencyModel(1, 0, 1, "Newspaper", "1"),
+  CurrencyModel(10, 0, 5, "Intern", "2"),
+  CurrencyModel(50, 0, 20, "Shrine", "3"),
+  CurrencyModel(500, 0, 100, "Temple", "4"),
+];
+
+List<UpgradeModel> purchaseUpgrades = [
+  UpgradeModel(1, 0, 1, "Laminated pages ", "Make your Newspaper more premium.",
+      "Energy"),
+  UpgradeModel(
+      4, 0, 5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
+  UpgradeModel(40, 0, 20, "Gilded Furniture",
+      "Allow your followers more luxury.", "Energy"),
+  UpgradeModel(350, 0, 100, "Holy Scripture",
+      "Your word is spread more easily.", "Energy"),
+];
 }

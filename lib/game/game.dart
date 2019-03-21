@@ -9,7 +9,7 @@ class MyGame extends BaseGame {
   MyApp _widget;
   Followers followers;
   Energy energy;
-  //this should be delegated to a subclass
+  //this should be delegated to a helper class
   Map<String, MainCurrency> _mainCurrencies = new Map();
   Map<String, Upgrade> _upgrades = new Map();
   CurrencyHandler ch = new CurrencyHandler();
@@ -48,6 +48,7 @@ class MyGame extends BaseGame {
     return this._upgrades;
   }
 
+  //too much duplication -> make a saver class or create function inside each object to handle save()
   saveData() {
     prefs.setDouble('Energy', energy.amount);
     prefs.setDouble('Followers', followers.amount);
@@ -103,6 +104,7 @@ class MyGame extends BaseGame {
   }
 
   int resolveDefaultValue(int value, int defaultValue) {
+    print(value.toString() + ' ' + defaultValue.toString());
     if (value == null) return defaultValue;
     if (value <= defaultValue) {
       return defaultValue;
@@ -111,6 +113,7 @@ class MyGame extends BaseGame {
   }
 
   double resolveDefaultValueFor(double value, double defaultValue) {
+    print(value.toString() + ' ' + defaultValue.toString());
     if (value == null) return defaultValue;
     if (value <= defaultValue) {
       return defaultValue;
@@ -121,5 +124,6 @@ class MyGame extends BaseGame {
   deleteSave() async {
     await prefs.clear();
     _mainCurrencies.forEach((key, value) => value.reset());
+    _upgrades.forEach((key, value) => value.reset());
   }
 }

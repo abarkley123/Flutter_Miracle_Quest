@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../game/game.dart';
 import '../home/homepage.dart';
+import 'dart:math';
 
 class ProgressButton extends StatefulWidget {
   final MyGame game;
@@ -18,6 +19,7 @@ class _ProgressButtonState extends State<ProgressButton>
     with TickerProviderStateMixin {
   final MyGame game;
   final String type;
+  bool isCritical = false;
   bool _isPressed = false, _animatingReveal = false;
   int _state = 0;
   double _width = double.infinity;
@@ -59,7 +61,7 @@ class _ProgressButtonState extends State<ProgressButton>
                 ? (this.type.startsWith("E") &&
                         this.game.mainCurrencies["Followers"].amount <= 0
                     ? Colors.red
-                    : Colors.green)
+                    : this.isCritical ? Color.fromARGB(255, 136, 14, 79) : Colors.green)
                 : Colors.indigoAccent,
             child: buildButtonChild(),
             onPressed: () {},
@@ -77,6 +79,11 @@ class _ProgressButtonState extends State<ProgressButton>
 
   void animateButton() {
     double initialWidth = _globalKey.currentContext.size.width;
+    int random = new Random().nextInt(100);
+    int critical = ((this.game.upgrades["Critical"].multiplier - 1) * 100).ceil();
+    if (random <= critical) {
+      this.isCritical = true;
+    }
 
     _controller =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
@@ -174,12 +181,23 @@ class _ProgressButtonState extends State<ProgressButton>
         ),
       );
     } else {
-      return Icon(
-          this.type.startsWith("E") &&
-                  this.game.mainCurrencies["Followers"].amount <= 0
-              ? Icons.clear
-              : Icons.check,
-          color: Colors.white);
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+        this.isCritical
+            ? Text(
+                "Critical",
+                style: TextStyle(color: Colors.white, fontSize: 24.0),
+              )
+            : Container(width: 0.0, height: 0.0),
+        Icon(
+            this.type.startsWith("E") &&
+                    this.game.mainCurrencies["Followers"].amount <= 0
+                ? Icons.clear
+                : this.isCritical ? Icons.whatshot : Icons.check,
+            color: Colors.white),
+      ]);
     }
   }
 

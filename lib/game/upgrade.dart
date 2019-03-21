@@ -1,5 +1,6 @@
 import 'currency.dart';
 import 'game.dart';
+import 'dart:math';
 
 abstract class Upgrader {
   void purchase(MainCurrency energy, {MainCurrency followers});
@@ -36,6 +37,10 @@ abstract class Upgrade implements Upgrader {
   set multiplier(double multiplier) {
     this._multiplier = multiplier;
   }
+
+  void reset() {
+    this.amount = 0;
+  }
 }
 
 class ClickUpgrade extends Upgrade {
@@ -48,29 +53,72 @@ class ClickUpgrade extends Upgrade {
     if (followers != null) {
       followers.active *= this.multiplier; 
     }    
-    return new ClickUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.1);
+    return new ClickUpgrade(this.cost*2, this.amount+1, this.multiplier*1.1);
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    this.cost = 10.0;
+    this.multiplier = 2.0;
   }
 }
 
 class TickUpgrade extends Upgrade {
+
+  double baseMultiplier = 1.1;
 
   TickUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
   TickUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
     energy.amount -= this.cost;
 
-    return new TickUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.2);
+    return new TickUpgrade(this.cost*2, this.amount+1, this.multiplier*1.1);
+  }
+
+  @override
+  get multiplier {
+    if (this.amount <= 0) {
+      return 1.1;
+    } else {
+      return this.baseMultiplier * (pow(1.1, this.amount));
+    }
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    this.cost = 40.0;
+    this.multiplier = 1.1;
   }
 }
 
 class CriticalUpgrade extends Upgrade {
 
+  double baseMultiplier = 1.05;
+
   CriticalUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
   CriticalUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
     energy.amount -= this.cost;
-       
-    return new CriticalUpgrade(this.cost*2, this.amount+1, this.multiplier*=1.25);
+
+    return new CriticalUpgrade(this.cost*2, this.amount+1, this.multiplier*1.05);
+  }
+
+  @override
+  get multiplier {
+    if (this.amount <= 0) {
+      return 1.05;
+    } else {
+      return this.baseMultiplier * (pow(1.05, this.amount));
+    }
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    this.cost = 100;
+    this.multiplier = 1.05;
   }
 }
 

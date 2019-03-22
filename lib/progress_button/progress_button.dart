@@ -60,7 +60,9 @@ class _ProgressButtonState extends State<ProgressButton>
                 ? (this.type.startsWith("E") &&
                         this.game.mainCurrencies["Followers"].amount <= 0
                     ? Colors.red
-                    : this.isCritical ? Color.fromARGB(255, 136, 14, 79) : Colors.green)
+                    : this.isCritical
+                        ? Color.fromARGB(255, 136, 14, 79)
+                        : Colors.green)
                 : Colors.indigoAccent,
             child: buildButtonChild(),
             onPressed: () {},
@@ -79,7 +81,8 @@ class _ProgressButtonState extends State<ProgressButton>
   void animateButton() {
     double initialWidth = _globalKey.currentContext.size.width;
     int random = new Random().nextInt(100);
-    int critical = ((this.game.upgrades["Critical"].multiplier - 1) * 100).ceil();
+    int critical =
+        ((this.game.upgrades["Critical"].multiplier - 1) * 100).ceil();
     if (random <= critical) {
       this.isCritical = true;
     }
@@ -99,8 +102,9 @@ class _ProgressButtonState extends State<ProgressButton>
     });
     double tickMultiplier = this.game.upgrades["Tick"].multiplier;
     Timer(Duration(milliseconds: (3000 / tickMultiplier).ceil()), () {
-      if (this.game.mainCurrencies["Followers"].amount >= 0)
-        this.type.startsWith("E") ? game.doMiracle(isCritical: this.isCritical) : game.doAscension(isCritical: this.isCritical);
+      if (this.type.startsWith("F")) {
+        game.doAscension(isCritical: this.isCritical);
+      }
       setState(() {
         _state = 2;
       });
@@ -108,6 +112,10 @@ class _ProgressButtonState extends State<ProgressButton>
 
     Timer(Duration(milliseconds: (4500 / tickMultiplier).ceil()), () {
       setState(() {
+        if (this.game.mainCurrencies["Followers"].amount >= 0 &&
+            this.type.startsWith("E")) {
+          game.doMiracle(isCritical: this.isCritical);
+        }
         _state = 0;
       });
     });
@@ -181,21 +189,22 @@ class _ProgressButtonState extends State<ProgressButton>
       );
     } else {
       return Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-        this.isCritical
-            ? Text(
-                "Critical",
-                style: TextStyle(color: Colors.white, fontSize: 24.0),
-              )
-            : Container(width: 0.0, height: 0.0),
-        Icon(
-            this.type.startsWith("E") && this.game.mainCurrencies["Followers"].amount <= 0
-                ? Icons.clear
-                : this.isCritical ? Icons.whatshot : Icons.check,
-            color: Colors.white),
-      ]);
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            this.isCritical
+                ? Text(
+                    "Critical",
+                    style: TextStyle(color: Colors.white, fontSize: 24.0),
+                  )
+                : Container(width: 0.0, height: 0.0),
+            Icon(
+                this.type.startsWith("E") &&
+                        this.game.mainCurrencies["Followers"].amount <= 0
+                    ? Icons.clear
+                    : this.isCritical ? Icons.whatshot : Icons.check,
+                color: Colors.white),
+          ]);
     }
   }
 

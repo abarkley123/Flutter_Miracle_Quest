@@ -4,7 +4,7 @@ import '../progress_button/progress_button.dart';
 import '../purchase/purchase_logic.dart';
 
 class HomePage extends StatefulWidget {
-  MyGame game;
+  final MyGame game;
 
   HomePage(this.game);
 

@@ -93,7 +93,9 @@ class Energy extends MainCurrency {
     this.title = "Basic Charm";
   }
 
-  void applyModifier(double m) {}
+  void applyModifier(double m) {
+    this._modifier += m;
+  }
 
   void increaseIncrement(double a) {}
 
@@ -153,7 +155,9 @@ class Followers extends MainCurrency {
     this.title = "Ascension";
   }
 
-  void applyModifier(double m) {}
+  void applyModifier(double m) {
+    this._modifier += m;
+  }
 
   void increaseIncrement(double a) {}
 

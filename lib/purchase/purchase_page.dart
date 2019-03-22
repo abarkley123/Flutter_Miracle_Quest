@@ -4,6 +4,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'purchase_logic.dart';
 import '../util/util.dart';
 import '../game/upgrade.dart';
+import '../game/data.dart';
 
 class PurchasePage extends StatefulWidget {
   final MyGame game;
@@ -19,7 +20,7 @@ class PurchasePageState extends State<PurchasePage> {
   final MyGame game;
 
   PurchasePageState(this.game) {
-    setCurrencyValue(this.game, "Follower");
+    setCurrencyValue(this.game, "Followers");
     setCurrencyValue(this.game, "Energy");
   }
 
@@ -109,23 +110,24 @@ class PurchasePageState extends State<PurchasePage> {
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, top: 8.0),
                       child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.indigoAccent,
-                        child: Row(children: <Widget>[
-                          Text("Buy [${_toFixedString(currency.cost)}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16.0)),
-                          Icon(
-                            Icons.flash_on,
-                            color: Color.fromARGB(255, 136, 14, 79),
-                          ),
-                          Text(
-                            "]",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ]),
-                        onPressed: () => _purchaseItem(this.game, currency, index)
-                      )),
+                          textColor: Colors.white,
+                          color: Colors.indigoAccent,
+                          child: Row(children: <Widget>[
+                            Text("Buy [${_toFixedString(currency.cost)}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0)),
+                            Icon(
+                              Icons.flash_on,
+                              color: Color.fromARGB(255, 136, 14, 79),
+                            ),
+                            Text(
+                              "]",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ]),
+                          onPressed: () =>
+                              _purchaseItem(this.game, currency, index))),
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, bottom: 8.0),
                       child: RaisedButton(
@@ -224,16 +226,24 @@ class PurchasePageState extends State<PurchasePage> {
   }
 
   String _toFixedString(double value) {
-    return value % 1 == 0 && value < 1000 ? value.floor().toString() : truncateBigValue(value);
+    if (value < 10) {
+      return value % 1 == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(1);
+    } else if (value < 100) {
+      return value.toStringAsFixed(0);
+    } else if (value < 1000) {
+      return value.floor().toString();
+    } else {
+      return truncateBigValue(value);
+    }
   }
 
-  Widget _currencyUpgradeWidget(int index, int currencyNum) {
-    Upgrade currency = index == 1
-        ? this.game.energyUpgrades[currencyNum]
-        : this.game.followerUpgrades[currencyNum];
-    UpgradeModel upgradeModel = index == 1
-        ? purchaseUpgradeModels[currencyNum]
-        : followerUpgradeModels[currencyNum];
+  Widget _currencyUpgradeWidget(int index, int upgradeNum) {
+    Upgrade upgrade = index == 1
+        ? this.game.energyUpgrades[upgradeNum]
+        : this.game.followerUpgrades[upgradeNum];
+    UpgradeDescription upgradeDesciption = index == 1
+        ? purchaseUpgradeDescriptions[upgradeNum]
+        : followerUpgradeDescriptions[upgradeNum];
     return Container(
       margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
       child: Card(
@@ -248,31 +258,31 @@ class PurchasePageState extends State<PurchasePage> {
                         height: 80.0,
                         minWidth: 100.0,
                         child: RaisedButton(
-                          textColor: Colors.white,
-                          color: Colors.indigoAccent,
-                          child: Column(children: <Widget>[
-                            Text("Upgrade",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 22.0)),
-                            Row(children: <Widget>[
-                              Text(
-                                '[${_toFixedString(currency.cost)}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0),
-                              ),
-                              Icon(
-                                Icons.flash_on,
-                                color: Color.fromARGB(255, 136, 14, 79),
-                              ),
-                              Text(']',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                            textColor: Colors.white,
+                            color: Colors.indigoAccent,
+                            child: Column(children: <Widget>[
+                              Text("Upgrade",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22.0)),
+                              Row(children: <Widget>[
+                                Text(
+                                  '[${_toFixedString(upgrade.cost)}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0),
+                                ),
+                                Icon(
+                                  Icons.flash_on,
+                                  color: Color.fromARGB(255, 136, 14, 79),
+                                ),
+                                Text(']',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                              ]),
                             ]),
-                          ]),
-                          onPressed: () => _upgradeItem(this.game, currency, index)
-                        ))),
+                            onPressed: () =>
+                                _upgradeItem(upgrade, index, upgradeNum)))),
               ]),
               Expanded(
                 child: Column(children: <Widget>[
@@ -285,7 +295,7 @@ class PurchasePageState extends State<PurchasePage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            upgradeModel.title,
+                            upgradeDesciption.title,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18.0),
                             textAlign: TextAlign.right,
@@ -294,7 +304,7 @@ class PurchasePageState extends State<PurchasePage> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            upgradeModel.description,
+                            upgradeDesciption.description,
                             style: TextStyle(fontSize: 16.0),
                             textAlign: TextAlign.center,
                           ),
@@ -312,7 +322,7 @@ class PurchasePageState extends State<PurchasePage> {
                   children: <Widget>[
                     Row(children: <Widget>[
                       Text(
-                        '+ ${_toFixedString(100 * (currency.multiplier - 1))} %',
+                        '+ ${_toFixedString(100 * (upgrade.multiplier - 1))} %',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       index == 1
@@ -326,7 +336,7 @@ class PurchasePageState extends State<PurchasePage> {
                     index == 1
                         ? Row(children: <Widget>[
                             Text(
-                              '- ${_toFixedString(100 * (currency.multiplier - 1))} %',
+                              '- ${_toFixedString(100 * (upgrade.multiplier - 1))} %',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Icon(Icons.person,
@@ -346,28 +356,31 @@ class PurchasePageState extends State<PurchasePage> {
   _purchaseItem(MyGame game, CurrencyModel currency, int index) {
     String type = index == 1 ? "Energy" : "Followers";
     if (game.mainCurrencies["Energy"].amount >= currency.cost) {
-      game.ch
-          .purchasePassive(game.mainCurrencies[type], currency.baseProd);
+      double increment = currency.baseProd; 
+      game.ch.purchasePassive(game.mainCurrencies[type], increment);
       setState(() {
         game.mainCurrencies["Energy"].amount -= currency.cost;
         currency.amount = currency.amount + 1;
         currency.cost = currency.cost * 2.5;
-        currency.baseProd = currency.baseProd * 1.05;
+        currency.baseProd = increment * 1.05;
       });
       game.savePurchase(type);
     }
   }
 
-  _upgradeItem(MyGame game, Upgrade upgrade, int index) {
-    if (index == 1 && game.mainCurrencies["Energy"].amount >= upgrade.cost) {
-      game.upgradeHandler.passivePurchase(game, upgrade);
+  _upgradeItem(Upgrade upgrade, int index, int upgradeNum) {
+    CurrencyModel currencyModel = index == 1
+        ? this.game.energyPurchases[upgradeNum]
+        : this.game.followerPurchases[upgradeNum];
+    if (game.mainCurrencies["Energy"].amount >= upgrade.cost) {
       setState(() {
-        upgrade.cost = upgrade.cost * 5;
-        upgrade.multiplier = upgrade.multiplier * 1.1;
-        upgrade.amount = upgrade.amount + 1;
+        Upgrade newUpgrade = this.game.upgradeHandler.passiveUpgrade(this.game, upgrade, currencyModel);
+        upgrade.amount = newUpgrade.amount;
+        upgrade.cost = newUpgrade.cost;
+        upgrade.multiplier = newUpgrade.multiplier;
       });
     } else {
-      print("Insufficent currency available for purchase.");
+      print("Insufficent currency available for upgrade.");
     }
   }
 
@@ -413,25 +426,3 @@ class CategoryCard extends StatelessWidget {
     );
   }
 }
-
-List<UpgradeModel> purchaseUpgradeModels = [
-  UpgradeModel(100, 0, 1.5, "Laminated pages ", "Make your Newspaper more premium.",
-      "Energy"),
-  UpgradeModel(2500, 0, 1.5, "Brazilian Coffee", "Improve your Intern's productivity.", "Energy"),
-  UpgradeModel(50000, 0, 1.5, "Gilded Furniture",
-      "Allow your followers more luxury.", "Energy"),
-  UpgradeModel(1000000, 0, 1.5, "Holy Scripture",
-      "Your word is spread more easily.", "Energy"),
-];
-
-
-List<UpgradeModel> followerUpgradeModels = [
-  UpgradeModel(100, 0, 1.5, "New Writer ", "Articles published are higher quality.",
-      "Followers"),
-  UpgradeModel(2000, 0, 1.5, "Bigger Amp", "Your speaker is heard by more people.",
-      "Followers"),
-  UpgradeModel(30000, 0, 1.5, "Divine Robes", "The apostles now emanate mystic energy.",
-      "Followers"),
-  UpgradeModel(750000, 0, 1.5, "Fine Chianti", "Spread the reach of communion.",
-      "Followers"),
-];

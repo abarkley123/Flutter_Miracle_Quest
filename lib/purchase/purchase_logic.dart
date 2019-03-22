@@ -1,5 +1,6 @@
 import '../game/game.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Category {
   const Category({this.name, this.icon, this.index});
@@ -14,11 +15,13 @@ const List<Category> categories = <Category>[
 ];
 
 class CurrencyModel {
+
   double _cost;
   double _startingCost;
   int _amount;
   double _baseProd;
   double _startingProd;
+  double _multiplier;
   final String title;
   final String description;
 
@@ -26,12 +29,14 @@ class CurrencyModel {
       this._cost, this._amount, this._baseProd, this.title, this.description) {
     this._startingCost = this._cost;
     this._startingProd = this._baseProd;
+    this._multiplier = 1.0;
   }
 
   void reset() {
     this._amount = 0;
     this.cost = this.startingCost;
     this._baseProd = this._startingProd;
+    this._multiplier = 1.0;
   }
 
   get startingCost {
@@ -61,13 +66,31 @@ class CurrencyModel {
   set amount(int amount) {
     this._amount = amount;
   }
+
+  get multiplier {
+    return this._multiplier;
+  }
+
+  set multiplier(double amount) {
+    this._multiplier = amount;
+  }
+  
+  double getTotalOutput() {
+    if (this._amount == 0) {
+      return 0.0;
+    } else if (this._amount <= 1) {
+      return this._startingProd * this._multiplier;
+    } else {
+      return this._startingProd * (pow(1.05, this.amount)) * this._multiplier;
+    }
+  }
 }
 
 void setCurrencyValue(MyGame game, String currencyType) {
   if (currencyType == "Followers") {
     setValues(game, game.followerPurchases, currencyType);
   } else if (currencyType == "Energy") {
-    setValues(game, game.followerPurchases, currencyType);
+    setValues(game, game.energyPurchases, currencyType);
   }
 }
 
@@ -81,38 +104,9 @@ void setValues(MyGame game, List<CurrencyModel> currency, String currencyType) {
   }
 }
 
-class UpgradeModel {
-  double _cost;
-  int _amount;
-  double _multiplier;
+class UpgradeDescription {
   final String title;
   final String description;
-  final String type;
 
-  UpgradeModel(this._cost, this._amount, this._multiplier, this.title,
-      this.description, this.type);
-
-  get cost {
-    return this._cost;
-  }
-
-  set cost(double cost) {
-    this._cost = cost;
-  }
-
-  get multiplier {
-    return this._multiplier;
-  }
-
-  set multiplier(double multiplier) {
-    this._multiplier = multiplier;
-  }
-
-  get amount {
-    return this._amount;
-  }
-
-  set amount(int amount) {
-    this._amount = amount;
-  }
+  UpgradeDescription(this.title, this.description);
 }

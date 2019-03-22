@@ -1,10 +1,9 @@
-import 'currency.dart';
 import 'game.dart';
 import 'dart:math';
 import '../purchase/purchase_logic.dart';
 
 abstract class Upgrader {
-  void purchase(MainCurrency energy, {MainCurrency followers});
+  Upgrade purchase(MyGame game, {CurrencyModel currency});
 }
 
 abstract class Upgrade implements Upgrader {
@@ -48,12 +47,10 @@ class ClickUpgrade extends Upgrade {
 
   ClickUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
-  ClickUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
-    energy.amount -= this.cost;
-    energy.active *= this.multiplier; 
-    if (followers != null) {
-      followers.active *= this.multiplier; 
-    }    
+  ClickUpgrade purchase(MyGame game, {CurrencyModel currency}) {
+    game.energy.amount -= this.cost;
+    game.energy.applyModifier(this.multiplier); 
+    game.followers.applyModifier(this.multiplier);  
     return new ClickUpgrade(this.cost*2, this.amount+1, this.multiplier*1.1);
   }
 
@@ -71,8 +68,8 @@ class TickUpgrade extends Upgrade {
 
   TickUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
-  TickUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
-    energy.amount -= this.cost;
+  TickUpgrade purchase(MyGame game, {CurrencyModel currency}) {
+    game.energy.amount -= this.cost;
 
     return new TickUpgrade(this.cost*2, this.amount+1, this.multiplier*1.1);
   }
@@ -100,8 +97,8 @@ class CriticalUpgrade extends Upgrade {
 
   CriticalUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
-  CriticalUpgrade purchase(MainCurrency energy, {MainCurrency followers}) {
-    energy.amount -= this.cost;
+  CriticalUpgrade purchase(MyGame game, {CurrencyModel currency}) {
+    game.energy.amount -= this.cost;
 
     return new CriticalUpgrade(this.cost*2, this.amount+1, this.multiplier*1.05);
   }
@@ -129,8 +126,12 @@ class EnergyUpgrade extends Upgrade {
 
   EnergyUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
-  EnergyUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
-    energy.amount -= this.cost;  
+  EnergyUpgrade purchase(MyGame game, {CurrencyModel currency}) {
+    game.energy.amount -= this.cost;  
+    
+    double originalMultiplier = currency.multiplier;
+    currency.multiplier = originalMultiplier * this.multiplier;
+    game.energy.increasePassiveIncrement((currency.getTotalOutput() * currency.multiplier) - (currency.getTotalOutput() * originalMultiplier));
     return new EnergyUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
@@ -157,8 +158,11 @@ class FollowerUpgrade extends Upgrade {
 
   FollowerUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
-  FollowerUpgrade purchase(MainCurrency energy, {MainCurrency followers, UpgradeModel upgrade}) {
-    energy.amount -= this.cost;
+  FollowerUpgrade purchase(MyGame game, {CurrencyModel currency}) {
+    game.energy.amount -= this.cost;
+    double originalMultiplier = currency.multiplier;
+    currency.multiplier = originalMultiplier * this.multiplier;
+    game.followers.increasePassiveIncrement((currency.getTotalOutput() * currency.multiplier) - (currency.getTotalOutput() * originalMultiplier));
     return new FollowerUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
@@ -182,10 +186,10 @@ class FollowerUpgrade extends Upgrade {
 class UpgradeHandler {
 
   Upgrade activePurchase(MyGame game, String type) {
-    return game.upgrades[type].purchase(game.mainCurrencies["Energy"], followers: game.mainCurrencies["Followers"]);
+    return game.upgrades[type].purchase(game);
   }
 
-  void passivePurchase(MyGame game, Upgrade upgrade) {
-    upgrade.purchase(game.mainCurrencies["Energy"], followers: game.mainCurrencies["Followers"]); 
+  Upgrade passiveUpgrade(MyGame game, Upgrade upgrade, CurrencyModel currency) {
+    return upgrade.purchase(game, currency: currency); 
   }
 }

@@ -97,18 +97,16 @@ class HomePageState extends State<HomePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
               child: Column(children: <Widget>[
-                (index == 1
-                    ? Text(
-                        'Net: ${(this.game.mainCurrencies[type].passive - this.game.mainCurrencies["Energy"].passive).toStringAsFixed(1)} per second',
+                  Text(
+                    'Net: ${(this.game.getAdjustedValueFor(type)).toStringAsFixed(1)} per second',
                         style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color.fromARGB(255, 19, 193, 100),
-                    ))
-                    : Container(width: 0.0, height: 0.0)),
+                    )
+                  ),
                 Text(
-                    (index == 0 ? '' : 'Gross: ') +
-                        '${this.game.mainCurrencies[type].passive.toStringAsFixed(1)} per second',
+                    'Gross: ${this.game.mainCurrencies[type].passive.toStringAsFixed(1)} per second',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -211,7 +209,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void _processUpgrade(MyGame game, type) {
+  void _processUpgrade(MyGame game, String type) {
     if (game.mainCurrencies["Energy"].amount >= game.upgrades[type].cost) {
       setState(() {
         game.upgrades[type] = game.upgradeHandler.activePurchase(game, type);

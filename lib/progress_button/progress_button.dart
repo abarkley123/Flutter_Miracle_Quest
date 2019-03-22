@@ -106,7 +106,7 @@ class _ProgressButtonState extends State<ProgressButton>
 
     Timer(Duration(milliseconds: (4500 / tickMultiplier).ceil()), () {
       if (this.game.mainCurrencies["Followers"].amount >= 0)
-        this.type.startsWith("E") ? game.doMiracle(this.game, isCritical: this.isCritical) : game.doAscension(game, isCritical: this.isCritical);
+        this.type.startsWith("E") ? game.doMiracle(isCritical: this.isCritical) : game.doAscension(isCritical: this.isCritical);
       setState(() {
         _state = 0;
       });

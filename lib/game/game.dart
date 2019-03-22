@@ -3,28 +3,43 @@ import 'currency.dart';
 import '../main.dart';
 import 'upgrade.dart';
 import '../purchase/purchase_logic.dart';
+import 'data.dart';
+import 'save.dart';
 
 class MyGame extends BaseGame {
+
   final prefs;
   int counter = 0;
   MyApp _widget;
-  Followers followers;
-  Energy energy;
+  Followers followers = new Followers();
+  Energy energy = new Energy();
   //this should be delegated to a helper class
   Map<String, MainCurrency> _mainCurrencies = new Map();
   Map<String, Upgrade> _upgrades = new Map();
+  List<EnergyUpgrade> energyUpgrades = new List();
+  List<FollowerUpgrade> followerUpgrades = new List();
+  List<CurrencyModel> energyPurchases = new List();
+  List<CurrencyModel> followerPurchases = new List();  
   CurrencyHandler ch = new CurrencyHandler();
   UpgradeHandler upgradeHandler = new UpgradeHandler();
 
   MyGame(this.prefs) {
-    energy = new Energy();
-    followers = new Followers();
+    setupCurrencies();
+    setupClickUpgrades();
+    setupPurchaseUpgrades(energyUpgrades, followerUpgrades);
+    setupPurchases(energyPurchases, followerPurchases);
+    loadData();
+  }
+
+  void setupCurrencies() {
     _mainCurrencies["Energy"] = energy;
     _mainCurrencies["Followers"] = followers;
+  }
+
+  void setupClickUpgrades() {
     _upgrades["Click"] = new ClickUpgrade(10.0, 0, 2.0);
     _upgrades["Tick"] = new TickUpgrade(40.0, 0, 1.1);
     _upgrades["Critical"] = new CriticalUpgrade(100.0, 0, 1.05);
-    loadData();
   }
 
   get widget {
@@ -35,18 +50,18 @@ class MyGame extends BaseGame {
     this._widget = wid;
   }
 
-  @override
-  void update(double t) {
-    followers.incrementPassive();
-    energy.incrementPassive(f: followers);
-  }
-
   get mainCurrencies {
     return this._mainCurrencies;
   }
 
   get upgrades {
     return this._upgrades;
+  }
+
+  @override
+  void update(double t) {
+    followers.incrementPassive();
+    energy.incrementPassive(f: followers);
   }
 
   //too much duplication -> make a saver class or create function inside each object to handle save()
@@ -57,9 +72,11 @@ class MyGame extends BaseGame {
     prefs.setDouble("FollowersPassive", followers.passive);
   }
 
-  savePurchase(List<CurrencyModel> purchases, String type) {
-    for (int i = 0; i < purchases.length; i++) {
-      prefs.setInt(type + i.toString() + "Amount", purchases[i].amount);
+  savePurchase(String type) {
+    if (type.startsWith("E")) {
+      savePurchaseFor("Energy", this.prefs, this.energyPurchases);
+    } else {
+      savePurchaseFor("Followers", this.prefs, this.followerPurchases);
     }
   }
 
@@ -119,45 +136,31 @@ class MyGame extends BaseGame {
     _upgrades.forEach((key, value) => value.reset());
     energyPurchases.forEach((purchase) => purchase.reset());
     followerPurchases.forEach((purchase) => purchase.reset());
+    energyUpgrades.forEach((upgrade) => upgrade.reset());
+    followerUpgrades.forEach((upgrade) => upgrade.reset());
   }
 
-  void doMiracle(MyGame game, {bool isCritical}) {
-    if (game.mainCurrencies["Followers"].amount <= 0.0) {
+  void doMiracle({bool isCritical}) {
+    if (this.mainCurrencies["Followers"].amount <= 0.0) {
     } else {
-      game.ch.click(game.mainCurrencies["Energy"],
-          f: game.mainCurrencies["Followers"], critical: isCritical);
+      this.ch.click(this.mainCurrencies["Energy"],
+          f: this.mainCurrencies["Followers"], critical: isCritical);
     }
   }
 
-  void doAscension(MyGame game, {bool isCritical}) {
-    game.ch.click(game.mainCurrencies["Followers"], critical: isCritical);
+  void doAscension({bool isCritical}) {
+    this.ch.click(this.mainCurrencies["Followers"], critical: isCritical);
   }
 
-  List<CurrencyModel> followerPurchases = [
-  CurrencyModel(1, 0, 1, "Articles ", "1"),
-  CurrencyModel(4, 0, 5, "Loudspeaker", "2"),
-  CurrencyModel(40, 0, 20, "Apostles", "3"),
-  CurrencyModel(350, 0, 100, "Communion", "4"),
-];
-
-List<CurrencyModel> energyPurchases = [
-  CurrencyModel(1, 0, 1, "Newspaper", "1"),
-  CurrencyModel(10, 0, 5, "Intern", "2"),
-  CurrencyModel(50, 0, 20, "Shrine", "3"),
-  CurrencyModel(500, 0, 100, "Temple", "4"),
-];
-
-List<EnergyUpgrade> purchaseUpgrades = [
-  EnergyUpgrade(100, 0, 1.5),
-  EnergyUpgrade(2500, 0, 1.5),
-  EnergyUpgrade(50000, 0, 1.5),
-  EnergyUpgrade(1000000, 0, 1.5),
-];
-
-List<FollowerUpgrade> followerUpgrades = [
-  FollowerUpgrade(100, 0, 1.5),
-  FollowerUpgrade(2000, 0, 1.5),
-  FollowerUpgrade(30000, 0, 1.5),
-  FollowerUpgrade(750000, 0, 1.5),
-];
+  double getAdjustedValueFor(String type) {
+    if (type.startsWith("E")) {
+      if (this._mainCurrencies[type].passive > this._mainCurrencies["Followers"].passive) {
+        return this._mainCurrencies["Followers"].passive;
+      } else {
+        return this._mainCurrencies[type].passive;
+      }
+    } else {
+      return this._mainCurrencies[type].passive - this._mainCurrencies["Energy"].passive;
+    }
+  }
 }

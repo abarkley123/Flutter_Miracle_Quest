@@ -77,9 +77,11 @@ class TickUpgrade extends Upgrade {
   @override
   get multiplier {
     if (this.amount <= 0) {
-      return 1.1;
+      return 1.01;
+    } else if (this.amount == 1) {
+      return this.baseMultiplier;
     } else {
-      return this.baseMultiplier * (pow(1.1, this.amount));
+      return this.baseMultiplier * (pow(1.05, this.amount));
     }
   }
 
@@ -106,7 +108,9 @@ class CriticalUpgrade extends Upgrade {
   @override
   get multiplier {
     if (this.amount <= 0) {
-      return 1.05;
+      return 1.01;
+    } else if (this.amount == 1) {
+      return this.baseMultiplier;
     } else {
       return this.baseMultiplier * (pow(1.05, this.amount));
     }

@@ -19,10 +19,7 @@ class PurchasePageState extends State<PurchasePage> {
   double width;
   final MyGame game;
 
-  PurchasePageState(this.game) {
-    setCurrencyValue(this.game, "Followers");
-    setCurrencyValue(this.game, "Energy");
-  }
+  PurchasePageState(this.game);
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +188,7 @@ class PurchasePageState extends State<PurchasePage> {
                     children: <Widget>[
                       Row(children: <Widget>[
                         Text(
-                          '+ ${_toFixedString(currency.baseProd)} ',
+                          '+ ${_toFixedString(currency.baseProd * currency.multiplier)} ',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         index == 1
@@ -207,7 +204,7 @@ class PurchasePageState extends State<PurchasePage> {
                       index == 1
                           ? Row(children: <Widget>[
                               Text(
-                                '- ${_toFixedString(currency.baseProd)} ',
+                                '- ${_toFixedString(currency.baseProd * currency.multiplier)} ',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Icon(
@@ -227,7 +224,9 @@ class PurchasePageState extends State<PurchasePage> {
 
   String _toFixedString(double value) {
     if (value < 10) {
-      return value % 1 == 0 ? value.toStringAsFixed(0) : value.toStringAsFixed(1);
+      return value % 1 == 0
+          ? value.toStringAsFixed(0)
+          : value.toStringAsFixed(1);
     } else if (value < 100) {
       return value.toStringAsFixed(0);
     } else if (value < 1000) {
@@ -356,7 +355,7 @@ class PurchasePageState extends State<PurchasePage> {
   _purchaseItem(MyGame game, CurrencyModel currency, int index) {
     String type = index == 1 ? "Energy" : "Followers";
     if (game.mainCurrencies["Energy"].amount >= currency.cost) {
-      double increment = currency.baseProd; 
+      double increment = currency.baseProd;
       game.ch.purchasePassive(game.mainCurrencies[type], increment);
       setState(() {
         game.mainCurrencies["Energy"].amount -= currency.cost;
@@ -374,7 +373,10 @@ class PurchasePageState extends State<PurchasePage> {
         : this.game.followerPurchases[upgradeNum];
     if (game.mainCurrencies["Energy"].amount >= upgrade.cost) {
       setState(() {
-        Upgrade newUpgrade = this.game.upgradeHandler.passiveUpgrade(this.game, upgrade, currencyModel);
+        Upgrade newUpgrade = this
+            .game
+            .upgradeHandler
+            .passiveUpgrade(this.game, upgrade, currencyModel);
         upgrade.amount = newUpgrade.amount;
         upgrade.cost = newUpgrade.cost;
         upgrade.multiplier = newUpgrade.multiplier;

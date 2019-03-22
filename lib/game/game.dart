@@ -73,6 +73,11 @@ class MyGame extends BaseGame {
     prefs.setDouble("FollowersPassive", followers.passive);
   }
 
+void loadPurchases() {
+  loadPurchase("Energy", this.prefs, this.energyPurchases);
+  loadPurchase("Followers", this.prefs, this.followerPurchases);
+}
+
   savePurchase(String type) {
     if (type.startsWith("E")) {
       savePurchaseFor("Energy", this.prefs, this.energyPurchases);
@@ -89,6 +94,7 @@ class MyGame extends BaseGame {
     loadActive();
     loadClickUpgrades();
     loadPurchaseUpgrades();
+    loadPurchases();
   }
 
   saveClickUpgrade(String type) {

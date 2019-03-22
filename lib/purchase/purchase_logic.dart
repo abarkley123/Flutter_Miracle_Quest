@@ -1,4 +1,3 @@
-import '../game/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
@@ -74,6 +73,10 @@ class CurrencyModel {
   set multiplier(double amount) {
     this._multiplier = amount;
   }
+
+  get startingProd {
+    return this._startingProd;
+  }
   
   double getTotalOutput() {
     if (this._amount == 0) {
@@ -83,24 +86,6 @@ class CurrencyModel {
     } else {
       return this._startingProd * (pow(1.05, this.amount)) * this._multiplier;
     }
-  }
-}
-
-void setCurrencyValue(MyGame game, String currencyType) {
-  if (currencyType == "Followers") {
-    setValues(game, game.followerPurchases, currencyType);
-  } else if (currencyType == "Energy") {
-    setValues(game, game.energyPurchases, currencyType);
-  }
-}
-
-void setValues(MyGame game, List<CurrencyModel> currency, String currencyType) {
-  for (int i = 0; i < currency.length; i++) {
-    currency[i].amount =
-        game.prefs.getInt(currencyType + i.toString() + "Amount") ?? 0;
-    currency[i].cost = currency[i].cost > currency[i].startingCost
-        ? currency[i].cost
-        : currency[i].startingCost;
   }
 }
 

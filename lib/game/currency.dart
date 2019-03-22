@@ -118,7 +118,7 @@ class Energy extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f, bool critical}) {
-    double criticalModifier = critical ? 1.0 * new Random().nextDouble() : 1.0; 
+    double criticalModifier = critical ? 1.0 + new Random().nextDouble() : 1.0; 
     double totalIncrement = this._incrementable * this._modifier;
     double amountToIncrement = 0;
     if (f.amount >= totalIncrement) {
@@ -169,7 +169,7 @@ class Followers extends MainCurrency {
 
   @override
   incrementActive({MainCurrency f, bool critical}) {
-    double criticalModifier = critical ? 1.0 * new Random().nextDouble() : 1.0; 
+    double criticalModifier = critical ? 1.0 + new Random().nextDouble() : 1.0; 
     this._amount += this._incrementable * this._modifier * criticalModifier;
 
     adjustForNegatives();

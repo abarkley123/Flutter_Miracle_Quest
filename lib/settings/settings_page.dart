@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
+import '../purchase/purchase_logic.dart';
 
 class SettingsPage extends StatefulWidget {
-
   final MyGame game;
 
   SettingsPage(this.game);
@@ -12,7 +12,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class SettingsPageState extends State<SettingsPage> {
-
   final MyGame game;
 
   SettingsPageState(this.game);
@@ -23,15 +22,57 @@ class SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    return new MaterialApp(
+        home: new DefaultTabController(
+      length: settingsCategories.length,
+      child: new Scaffold(
+        appBar: new PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: new TabBar(
+            tabs: settingsCategories.map((Category choice) {
+              return new Tab(
+                child: Text(
+                  choice.name,
+                  style: TextStyle(color: Colors.black),
+                ),
+                icon: new Icon(
+                  choice.icon,
+                  color: Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+        body: new TabBarView(
+          children: settingsCategories.map((Category choice) {
+            return new Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: _choiceWidget(choice),
+            );
+          }).toList(),
+        ),
+      ),
+    ));
+  }
+
+  Widget _choiceWidget(Category choice) {
+    if (choice.index == 1) {
+      return _settingsWidget();
+    } else {
+      return _settingsWidget();
+    }
+  }
+
+  Widget _settingsWidget() {
     return Scaffold(
-      backgroundColor:  Color(0xFFF4F4F4),
+      backgroundColor: Color(0xFFF4F4F4),
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Padding(
               padding:
-              const EdgeInsets.only(top: 30.0, left: 16.0, right: 16.0),
+                  const EdgeInsets.only(top: 30.0, left: 16.0, right: 16.0),
               child: Text(
                 'Settings',
                 style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20.0),
@@ -40,207 +81,232 @@ class SettingsPageState extends State<SettingsPage> {
             Container(
               child: Expanded(
                 child: ListView.builder(
-                  itemCount: 2,
+                    itemCount: 2,
                     itemBuilder: (BuildContext context, int index) {
-                    if (index == 0) {
-                      return Container(
-                        margin: EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Padding(
-                              padding:
-                              const EdgeInsets.symmetric(horizontal: 0.0),
-                              child: Text(
-                                'Personal Information',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w700, fontSize: 14.0),
-                              ),
-                            ),
-                            Card(
-                              child: Container(
-                                margin: EdgeInsets.only(top: 8.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .stretch,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text('Long Hoang'),
-                                            ),
-                                            GestureDetector(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(right: 4.0),
-                                                    child: Text('Edit'),
-                                                  ),
-                                                  Icon(Icons.edit, size: 10.0,)
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text(
-                                                  'longhoang.2984@gmail.com'),
-                                            ),
-                                            GestureDetector(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(right: 4.0),
-                                                    child: Text('Edit'),
-                                                  ),
-                                                  Icon(Icons.edit, size: 10.0,)
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text('07 - 05 - 1993'),
-                                            ),
-                                            GestureDetector(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets
-                                                        .only(right: 4.0),
-                                                    child: Text('Edit'),
-                                                  ),
-                                                  Icon(Icons.edit, size: 10.0,)
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text('Security'),
-                                            ),
-                                            GestureDetector(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(Icons.navigate_next,
-                                                    size: 16.0,)
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16.0),
-                                        child: Row(
-                                          children: <Widget>[
-                                            Expanded(
-                                              child: Text('Manage Accounts'),
-                                            ),
-                                            GestureDetector(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(Icons.navigate_next,
-                                                    size: 16.0,)
-                                                ],
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                      if (index == 0) {
+                        return Container(
+                          margin: EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0.0),
+                                child: Text(
+                                  'Personal Information',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14.0),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                      );
-                    }else {
-                      return Container(
+                              Card(
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 8.0),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text('Long Hoang'),
+                                              ),
+                                              GestureDetector(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    Icon(
+                                                      Icons.edit,
+                                                      size: 10.0,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text(
+                                                    'longhoang.2984@gmail.com'),
+                                              ),
+                                              GestureDetector(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    Icon(
+                                                      Icons.edit,
+                                                      size: 10.0,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text('07 - 05 - 1993'),
+                                              ),
+                                              GestureDetector(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 4.0),
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    Icon(
+                                                      Icons.edit,
+                                                      size: 10.0,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text('Security'),
+                                              ),
+                                              GestureDetector(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons.navigate_next,
+                                                      size: 16.0,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 16.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                child: Text('Manage Accounts'),
+                                              ),
+                                              GestureDetector(
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Icon(
+                                                      Icons.navigate_next,
+                                                      size: 16.0,
+                                                    )
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Container(
 //                      padding: EdgeInsets.all(16.0),
-                      margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                        height: 135.0,
-                        child: Card(
-                          child: Container(
-                            margin: EdgeInsets.all(16.0),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16.0, right: 20.0),
-                                  child: Image.asset('images/ico_gift.png',
-                                  height: 73.0, width: 108.0,),
-                                ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 8.0),
-                                        child: Text('Share the\ngift of love',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                fontSize: 14.0
-                                            )),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => _deletePrefs(this.game),
-                                        child: Container(
-                                          width: 135.0,
-                                          decoration: BoxDecoration(
-                                              color: Color(0xFF65D5E3),
-                                            borderRadius: BorderRadius.all(Radius.circular(11.0))
-                                          ),
-                                          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                          child: Text(
-                                            'DELETE',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 18.0
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                          height: 135.0,
+                          child: Card(
+                            child: Container(
+                              margin: EdgeInsets.all(16.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 16.0, right: 20.0),
+                                    child: Image.asset(
+                                      'images/ico_gift.png',
+                                      height: 73.0,
+                                      width: 108.0,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: Text('Share the\ngift of love',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 14.0)),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () => _deletePrefs(this.game),
+                                          child: Container(
+                                            width: 135.0,
+                                            decoration: BoxDecoration(
+                                                color: Color(0xFF65D5E3),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(11.0))),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16.0,
+                                                vertical: 8.0),
+                                            child: Text(
+                                              'DELETE',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 18.0),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }
-                }),
+                        );
+                      }
+                    }),
               ),
             ),
           ],
@@ -249,3 +315,8 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
+List<Category> settingsCategories = [
+  Category(name: 'Settings', icon: Icons.developer_mode, index: 1),
+  Category(name: 'Statistics', icon: Icons.insert_chart, index: 2),
+];

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
 import '../progress_button/progress_button.dart';
-
+import '../purchase/purchase_logic.dart';
 
 class HomePage extends StatefulWidget {
   MyGame game;
@@ -97,14 +97,13 @@ class HomePageState extends State<HomePage> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15.0),
               child: Column(children: <Widget>[
-                  Text(
+                Text(
                     'Net: ${(this.game.getAdjustedValueFor(type)).toStringAsFixed(1)} per second',
-                        style: TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Color.fromARGB(255, 19, 193, 100),
-                    )
-                  ),
+                    )),
                 Text(
                     'Gross: ${this.game.mainCurrencies[type].passive.toStringAsFixed(1)} per second',
                     style: TextStyle(
@@ -147,7 +146,7 @@ class HomePageState extends State<HomePage> {
                   child: Column(children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(
-                          left: 8.0, top: 8.0, bottom: 8.0),
+                          left: 8.0, top: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -162,14 +161,17 @@ class HomePageState extends State<HomePage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
+                      padding: const EdgeInsets.only(top: 2.0, left: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            "${upgrade.description} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
-                            style:TextStyle(fontWeight: FontWeight.bold, color:Color.fromARGB(255, 19, 193, 100),),
+                            "${upgrade.description}",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              fontStyle: FontStyle.italic
+                            ),
                             textAlign: TextAlign.left,
                           ),
                         ],
@@ -177,9 +179,26 @@ class HomePageState extends State<HomePage> {
                     ),
                   ]),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        "${upgrade.modifier} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 19, 193, 100),
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                ),
                 Column(children: <Widget>[
                   Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 2.0),
                       child: RaisedButton(
                           textColor: Colors.white,
                           color: Colors.indigoAccent,
@@ -223,17 +242,32 @@ class HomePageState extends State<HomePage> {
 }
 
 class UpgradeModel {
-  final String title;
-  final String description;
+  final String _title;
+  UpgradeDescription _upgradeDescription;
   final String type;
 
-  UpgradeModel(this.title,this.description, this.type);
+  UpgradeModel(this._title, String modifier, String description, this.type) {
+    _upgradeDescription = new UpgradeDescription(modifier, description);
+  }
+
+  get title {
+    return this._title;
+  }
+
+  get modifier {
+    return _upgradeDescription.title;
+  }
+
+  get description {
+    return _upgradeDescription.description;
+  }
 }
 
 List<UpgradeModel> upgrades = [
-  UpgradeModel("Power ", "Power +", "Click"),
-  UpgradeModel("Speed", "Speed +", "Tick"),
-  UpgradeModel("Luck", "Critical +", "Critical"),
+  UpgradeModel("Power ", "Power +", "Use gravity to warp space.", "Click"),
+  UpgradeModel("Speed", "Speed +", "Outrun the clock.", "Tick"),
+  UpgradeModel(
+      "Luck", "Critical +", "Take a dance with lady luck.", "Critical"),
 ];
 
 class Category {

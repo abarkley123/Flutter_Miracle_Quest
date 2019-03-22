@@ -99,14 +99,14 @@ class _ProgressButtonState extends State<ProgressButton>
     });
     double tickMultiplier = this.game.upgrades["Tick"].multiplier;
     Timer(Duration(milliseconds: (3000 / tickMultiplier).ceil()), () {
+      if (this.game.mainCurrencies["Followers"].amount >= 0)
+        this.type.startsWith("E") ? game.doMiracle(isCritical: this.isCritical) : game.doAscension(isCritical: this.isCritical);
       setState(() {
         _state = 2;
       });
     });
 
     Timer(Duration(milliseconds: (4500 / tickMultiplier).ceil()), () {
-      if (this.game.mainCurrencies["Followers"].amount >= 0)
-        this.type.startsWith("E") ? game.doMiracle(isCritical: this.isCritical) : game.doAscension(isCritical: this.isCritical);
       setState(() {
         _state = 0;
       });
@@ -191,8 +191,7 @@ class _ProgressButtonState extends State<ProgressButton>
               )
             : Container(width: 0.0, height: 0.0),
         Icon(
-            this.type.startsWith("E") &&
-                    this.game.mainCurrencies["Followers"].amount <= 0
+            this.type.startsWith("E") && this.game.mainCurrencies["Followers"].amount <= 0
                 ? Icons.clear
                 : this.isCritical ? Icons.whatshot : Icons.check,
             color: Colors.white),

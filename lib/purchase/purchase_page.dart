@@ -229,7 +229,7 @@ class PurchasePageState extends State<PurchasePage> {
 
   Widget _currencyUpgradeWidget(int index, int currencyNum) {
     Upgrade currency = index == 1
-        ? this.game.purchaseUpgrades[currencyNum]
+        ? this.game.energyUpgrades[currencyNum]
         : this.game.followerUpgrades[currencyNum];
     UpgradeModel upgradeModel = index == 1
         ? purchaseUpgradeModels[currencyNum]
@@ -354,7 +354,7 @@ class PurchasePageState extends State<PurchasePage> {
         currency.cost = currency.cost * 2.5;
         currency.baseProd = currency.baseProd * 1.05;
       });
-      game.savePurchase(game.followerPurchases, type);
+      game.savePurchase(type);
     }
   }
 
@@ -380,10 +380,10 @@ class PurchasePageState extends State<PurchasePage> {
       });
       if (index == 1) {
         game.ch.sellPassive(game.mainCurrencies["Energy"], currency);
-        game.savePurchase(game.energyPurchases, "Energy");
+        game.savePurchase("Energy");
       } else if (index == 2) {
         game.ch.sellPassive(game.mainCurrencies["Followers"], currency);
-        game.savePurchase(game.followerPurchases, "Followers");
+        game.savePurchase("Followers");
       }
     }
   }

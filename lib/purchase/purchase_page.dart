@@ -378,6 +378,7 @@ class PurchasePageState extends State<PurchasePage> {
         upgrade.amount = newUpgrade.amount;
         upgrade.cost = newUpgrade.cost;
         upgrade.multiplier = newUpgrade.multiplier;
+        this.game.savePurchaseUpgrades();
       });
     } else {
       print("Insufficent currency available for upgrade.");

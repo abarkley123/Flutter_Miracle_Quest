@@ -5,6 +5,7 @@ import 'upgrade.dart';
 import '../purchase/purchase_logic.dart';
 import 'data.dart';
 import 'save.dart';
+import 'dart:math';
 
 class MyGame extends BaseGame {
 
@@ -87,6 +88,7 @@ class MyGame extends BaseGame {
     followers.passive = prefs.getDouble("FollowersPassive") ?? 0;
     loadActive();
     loadClickUpgrades();
+    loadPurchaseUpgrades();
   }
 
   saveClickUpgrade(String type) {
@@ -102,6 +104,32 @@ class MyGame extends BaseGame {
       v.multiplier = resolveDefaultValueFor(
           prefs.getDouble(k + 'multiplier'), v.multiplier);
     });
+  }
+
+  savePurchaseUpgrades() {
+    for (int i = 0; i < energyUpgrades.length; i++) {
+      savePurchaseUpgrade("Energy", i, energyUpgrades[i]);
+      savePurchaseUpgrade("Followers", i, followerUpgrades[i]);
+    }
+  }
+
+  savePurchaseUpgrade(String type, int index, Upgrade upgrade) {
+    prefs.setInt(type + "Upgrade" + index.toString() + "Amount", upgrade.amount);
+    prefs.setDouble(type + "Upgrade" + index.toString() + "Multiplier", upgrade.multiplier);
+  }
+
+  loadPurchaseUpgrades() {
+    for (int i = 0; i < energyUpgrades.length; i++) {
+      loadPurchaseUpgrade("Energy", i, energyUpgrades[i]);
+      loadPurchaseUpgrade("Followers", i, followerUpgrades[i]);
+    } 
+  }
+
+  loadPurchaseUpgrade(String type, int index, Upgrade upgrade) {
+    upgrade.reset();
+    upgrade.amount = prefs.getInt(type + "Upgrade" + index.toString() + "Amount") ?? 0;
+    upgrade.multiplier = prefs.getDouble(type + "Upgrade" + index.toString() + "Multiplier") ?? 1.0;
+    upgrade.cost = upgrade.amount > 0 ? upgrade.cost * pow(5, upgrade.amount) : upgrade.cost;
   }
 
   saveActive() {

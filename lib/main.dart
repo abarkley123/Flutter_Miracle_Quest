@@ -239,11 +239,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class MyTextWidget extends StatefulWidget {
 
-  _MyTextWidgetState state;
+  final _MyTextWidgetState state = new _MyTextWidgetState();
 
-  MyTextWidget() {
-    this.state = new _MyTextWidgetState();
-  }
+  MyTextWidget();
 
   @override
   _MyTextWidgetState createState() => this.state;

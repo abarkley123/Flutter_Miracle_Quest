@@ -404,28 +404,3 @@ class PurchasePageState extends State<PurchasePage> {
     }
   }
 }
-
-// Our CategoryCard data object
-class CategoryCard extends StatelessWidget {
-  const CategoryCard({Key key, this.choice}) : super(key: key);
-  final Category choice;
-
-  //build and return our card with icon and text
-  @override
-  Widget build(BuildContext context) {
-    final TextStyle textStyle = Theme.of(context).textTheme.display1;
-    return new Card(
-      color: Colors.white,
-      child: new Center(
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            new Icon(choice.icon, size: 128.0, color: textStyle.color),
-            new Text(choice.name, style: textStyle),
-          ],
-        ),
-      ),
-    );
-  }
-}

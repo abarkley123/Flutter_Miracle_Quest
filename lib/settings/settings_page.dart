@@ -181,6 +181,26 @@ Widget _saveAlterationWidget(MyGame game) {
                     child: Row(
                       children: <Widget>[
                         Expanded(
+                          child: Text('Save your progress',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic, fontSize: 16.0)),
+                        ),
+                        GestureDetector(
+                          child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: FloatingActionButton(
+                                  child: Icon(Icons.save, color: Colors.white),
+                                  backgroundColor: Colors.indigoAccent,
+                                  onPressed: () => game.saveData())),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0, left: 16.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
                           child: Text('Reset your progress',
                               style: TextStyle(
                                   fontStyle: FontStyle.italic, fontSize: 16.0)),
@@ -193,26 +213,6 @@ Widget _saveAlterationWidget(MyGame game) {
                                       color: Colors.white),
                                   backgroundColor: Colors.indigoAccent,
                                   onPressed: () => game.deleteSave())),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0, left: 16.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text('Save your progress',
-                              style: TextStyle(
-                                  fontStyle: FontStyle.italic, fontSize: 16.0)),
-                        ),
-                        GestureDetector(
-                          child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: FloatingActionButton(
-                                  child: Icon(Icons.save, color: Colors.white),
-                                  backgroundColor: Colors.indigoAccent,
-                                  onPressed: () => game.saveData())),
                         )
                       ],
                     ),

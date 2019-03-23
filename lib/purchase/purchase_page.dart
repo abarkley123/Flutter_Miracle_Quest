@@ -103,7 +103,80 @@ class PurchasePageState extends State<PurchasePage> {
                 const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Row(
               children: <Widget>[
-                Column(children: <Widget>[
+                Expanded(
+                  child: Column(children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 8.0, top: 20.0, bottom: 4.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            currency.title,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16.0),
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Own ${currency.amount}",
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
+                      ),
+                    ),
+                  
+                
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0, top: 16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(children: <Widget>[
+                        Text(
+                          '+ ${_toFixedString(currency.baseProd * currency.multiplier)} ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        index == 1
+                            ? Icon(
+                                Icons.flash_on,
+                                color: Color.fromARGB(255, 136, 14, 79),
+                              )
+                            : Icon(
+                                Icons.person,
+                                color: Color.fromARGB(255, 19, 193, 100),
+                              ),
+                      ]),
+                      index == 1
+                          ? Row(children: <Widget>[
+                              Text(
+                                '- ${_toFixedString(currency.baseProd * currency.multiplier)} ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Icon(
+                                Icons.person,
+                                color: Color.fromARGB(255, 19, 193, 100),
+                              ),
+                            ])
+                          : new Container(width: 0, height: 0),
+                    ],
+                  ),
+                ),
+              ])),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                
                   Padding(
                       padding: const EdgeInsets.only(right: 16.0, top: 8.0),
                       child: RaisedButton(
@@ -147,77 +220,7 @@ class PurchasePageState extends State<PurchasePage> {
                           onPressed: () =>
                               _sellItem(this.game, currency, index))),
                 ]),
-                Expanded(
-                  child: Column(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 20.0, bottom: 4.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            currency.title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16.0),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "Own ${currency.amount}",
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Row(children: <Widget>[
-                        Text(
-                          '+ ${_toFixedString(currency.baseProd * currency.multiplier)} ',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        index == 1
-                            ? Icon(
-                                Icons.flash_on,
-                                color: Color.fromARGB(255, 136, 14, 79),
-                              )
-                            : Icon(
-                                Icons.person,
-                                color: Color.fromARGB(255, 19, 193, 100),
-                              ),
-                      ]),
-                      index == 1
-                          ? Row(children: <Widget>[
-                              Text(
-                                '- ${_toFixedString(currency.baseProd * currency.multiplier)} ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Icon(
-                                Icons.person,
-                                color: Color.fromARGB(255, 19, 193, 100),
-                              ),
-                            ])
-                          : new Container(width: 0, height: 0),
-                    ],
-                  ),
-                ),
-              ],
-            )),
+              ])),
       ),
     );
   }
@@ -244,112 +247,85 @@ class PurchasePageState extends State<PurchasePage> {
         ? purchaseUpgradeDescriptions[upgradeNum]
         : followerUpgradeDescriptions[upgradeNum];
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            children: <Widget>[
-              Column(children: <Widget>[
-                Padding(
-                    padding: const EdgeInsets.only(right: 16.0, top: 16.0),
-                    child: ButtonTheme(
-                        height: 80.0,
-                        minWidth: 100.0,
-                        child: RaisedButton(
-                            textColor: Colors.white,
-                            color: Colors.indigoAccent,
-                            child: Column(children: <Widget>[
-                              Text("Upgrade",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22.0)),
-                              Row(children: <Widget>[
-                                Text(
-                                  '[${_toFixedString(upgrade.cost)}',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0),
-                                ),
-                                Icon(
-                                  Icons.flash_on,
-                                  color: Color.fromARGB(255, 136, 14, 79),
-                                ),
-                                Text(']',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ]),
-                            ]),
-                            onPressed: () =>
-                                _upgradeItem(upgrade, index, upgradeNum)))),
-              ]),
-              Expanded(
-                child: Column(children: <Widget>[
+        margin: EdgeInsets.only(bottom: 16.0, left: 8.0, right: 8.0, top: 16.0),
+        child: Card(
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+          child: Row(children: <Widget>[
+            Expanded(
+                child: IntrinsicHeight(
+                    child: Column(children: <Widget>[
+              Column(
+                children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            upgradeDesciption.title,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0),
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            upgradeDesciption.description,
-                            style: TextStyle(fontSize: 16.0),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ],
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      upgradeDesciption.title,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18.0),
+                      textAlign: TextAlign.left,
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      upgradeDesciption.description,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 12.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                  Text(
+                    ' +${_toFixedString(100 * (upgrade.multiplier - 1))}%',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  index == 1
+                      ? Icon(
+                          Icons.flash_on,
+                          color: Color.fromARGB(255, 136, 14, 79),
+                        )
+                      : Icon(Icons.person,
+                          color: Color.fromARGB(255, 19, 193, 100)),
+                  index == 1
+                      ? Row(children: <Widget>[
+                          Text(
+                            '-${_toFixedString(100 * (upgrade.multiplier - 1))}%',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Icon(Icons.person,
+                              color: Color.fromARGB(255, 19, 193, 100))
+                        ])
+                      : new Container(width: 0, height: 0),
+                  Text(
+                    ' costs ${_toFixedString(upgrade.cost)}',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                  ),
+                  Icon(
+                    Icons.flash_on,
+                    color: Color.fromARGB(255, 136, 14, 79),
                   ),
                 ]),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Row(children: <Widget>[
-                      Text(
-                        '+ ${_toFixedString(100 * (upgrade.multiplier - 1))} %',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      index == 1
-                          ? Icon(
-                              Icons.flash_on,
-                              color: Color.fromARGB(255, 136, 14, 79),
-                            )
-                          : Icon(Icons.person,
-                              color: Color.fromARGB(255, 19, 193, 100))
-                    ]),
-                    index == 1
-                        ? Row(children: <Widget>[
-                            Text(
-                              '- ${_toFixedString(100 * (upgrade.multiplier - 1))} %',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Icon(Icons.person,
-                                color: Color.fromARGB(255, 19, 193, 100))
-                          ])
-                        : new Container(width: 0, height: 0),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            ]))),
+            GestureDetector(
+              child: FloatingActionButton(
+                  child: Icon(
+                    Icons.trending_up,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.indigoAccent,
+                  onPressed: () => _upgradeItem(upgrade, index, upgradeNum)),
+            ),
+          ]),
+        )));
   }
 
   _purchaseItem(MyGame game, CurrencyModel currency, int index) {

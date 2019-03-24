@@ -72,7 +72,7 @@ class HomePageState extends State<HomePage> {
               return Container(
                   color: Color(0xFFecf2f9),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 4,
+                  height: MediaQuery.of(context).size.height / 3.5,
                   child: _purchaseUpgradeWidget(index));
             }),
       );
@@ -133,97 +133,104 @@ class HomePageState extends State<HomePage> {
   Widget _purchaseUpgradeWidget(int index) {
     UpgradeModel upgrade = upgrades[index];
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(children: <Widget>[
-                Expanded(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(children: <Widget>[
+              Expanded(
                   child: Column(children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "${upgrade.title}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0, left: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            "${upgrade.description}",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              fontStyle: FontStyle.italic
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "${this.game.upgrades[upgrade.type].amount}",
+                              textAlign: TextAlign.left,
                             ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
+                          ]),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              upgrade.title,
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16.0),
+                            ),
+                          ]),
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              "",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16.0),
+                            ),
+                          ]),
+                    ],
+                  ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    upgrade.description,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        TextStyle(fontSize: 16.0, fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        "${upgrade.modifier} ${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}%",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                        "Click ${upgrade.modifier} +${(100 * game.upgrades[upgrade.type].multiplier - 100).toStringAsFixed(1)}% ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Column(children: <Widget>[
+                        Icon(
+                          Icons.flash_on,
+                          color: Color.fromARGB(255, 136, 14, 79),
+                        ),
+                        Icon(
+                          Icons.person,
                           color: Color.fromARGB(255, 19, 193, 100),
                         ),
-                        textAlign: TextAlign.left,
+                      ]),
+                      Text(
+                        "Costs ${game.upgrades[upgrade.type].cost.ceil()}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Icon(
+                        Icons.flash_on,
+                        color: Color.fromARGB(255, 136, 14, 79),
                       ),
                     ],
                   ),
                 ),
-                Column(children: <Widget>[
-                  Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: RaisedButton(
-                          textColor: Colors.white,
-                          color: Colors.indigoAccent,
-                          child: Row(children: <Widget>[
-                            Text(
-                                "Buy [${game.upgrades[upgrade.type].cost.ceil()}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16.0)),
-                            Icon(
-                              Icons.flash_on,
-                              color: Color.fromARGB(255, 136, 14, 79),
-                            ),
-                            Text(
-                              "]",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ]),
-                          onPressed: () =>
-                              _processUpgrade(this.game, upgrade.type))),
-                ]),
-              ]),
-            ],
-          ),
-        ),
+              ])),
+              GestureDetector(
+                child: FloatingActionButton(
+                    child: Icon(
+                      Icons.attach_money,
+                      color: Colors.white,
+                    ),
+                    backgroundColor: Colors.indigoAccent,
+                    onPressed: () => _processUpgrade(this.game, upgrade.type)),
+              ),
+            ])),
       ),
     );
   }
@@ -235,6 +242,7 @@ class HomePageState extends State<HomePage> {
       });
       game.saveActive();
       game.saveClickUpgrade(type);
+            print(game.followers.active);
     } else {
       print("Not enough energy for upgrade.");
     }
@@ -264,10 +272,9 @@ class UpgradeModel {
 }
 
 List<UpgradeModel> upgrades = [
-  UpgradeModel("Power ", "Power +", "Use gravity to warp space.", "Click"),
-  UpgradeModel("Speed", "Speed +", "Outrun the clock.", "Tick"),
-  UpgradeModel(
-      "Luck", "Critical +", "Take a dance with lady luck.", "Critical"),
+  UpgradeModel("Power ", "Power", "Use gravity to warp space.", "Click"),
+  UpgradeModel("Speed", "Speed", "Outrun the clock.", "Tick"),
+  UpgradeModel("Luck", "Critical", "Take a dance with lady luck.", "Critical"),
 ];
 
 class Category {

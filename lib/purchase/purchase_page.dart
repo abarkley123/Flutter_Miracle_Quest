@@ -95,9 +95,8 @@ class PurchasePageState extends State<PurchasePage> {
     CurrencyModel currency = index == 1
         ? game.energyPurchases[currencyNum]
         : game.followerPurchases[currencyNum];
-    print(currency.baseProd.toString() + ' ' + currency.multiplier.toString());
     return Container(
-      margin: EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
+      margin: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
       child: Card(
         child: Padding(
             padding:

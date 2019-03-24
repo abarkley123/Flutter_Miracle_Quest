@@ -139,15 +139,19 @@ class _ProgressButtonState extends State<ProgressButton>
               Text(
                 '+ ' +
                     (this.type.startsWith("E")
-                        ? this
+                        ? (this
                             .game
                             .mainCurrencies["Energy"]
-                            .incrementable
+                            .active * this.game
+                            .mainCurrencies["Energy"]
+                            .modifier)
                             .toStringAsFixed(1)
-                        : this
+                        : (this
                             .game
                             .mainCurrencies["Followers"]
-                            .incrementable
+                            .active * this.game
+                            .mainCurrencies["Followers"]
+                            .modifier)
                             .toStringAsFixed(1)) +
                     " ",
                 style: TextStyle(color: Colors.white, fontSize: 16.0),
@@ -161,11 +165,13 @@ class _ProgressButtonState extends State<ProgressButton>
               (this.type.startsWith("E")
                   ? Text(
                       '- ' +
-                          this
-                              .game
-                              .mainCurrencies["Followers"]
-                              .incrementable
-                              .toStringAsFixed(1) +
+                          (this
+                            .game
+                            .mainCurrencies["Energy"]
+                            .active * this.game
+                            .mainCurrencies["Energy"]
+                            .modifier)
+                            .toStringAsFixed(1) +
                           " ",
                       style: TextStyle(color: Colors.white, fontSize: 16.0),
                     )

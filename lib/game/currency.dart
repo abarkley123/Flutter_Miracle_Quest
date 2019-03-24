@@ -94,7 +94,7 @@ class Energy extends MainCurrency {
   }
 
   void applyModifier(double m) {
-    this._modifier += m;
+    this._modifier *= m;
   }
 
   void increaseIncrement(double a) {}
@@ -156,7 +156,7 @@ class Followers extends MainCurrency {
   }
 
   void applyModifier(double m) {
-    this._modifier += m;
+    this._modifier *= m;
   }
 
   void increaseIncrement(double a) {}

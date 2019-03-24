@@ -63,6 +63,7 @@ class MyGame extends BaseGame {
   void update(double t) {
     followers.incrementPassive();
     energy.incrementPassive(f: followers);
+    followers.adjustForNegatives();
   }
 
   //too much duplication -> make a saver class or create function inside each object to handle save()

@@ -131,11 +131,14 @@ class EnergyUpgrade extends Upgrade {
   EnergyUpgrade(double cost, int amount, double multiplier) : super(cost, amount, multiplier);
 
   EnergyUpgrade purchase(MyGame game, {CurrencyModel currency}) {
-    game.energy.amount -= this.cost;  
-    
+    game.energy.amount -= this.cost;
     double originalMultiplier = currency.multiplier;
+    double originalTotalValue = getCompleteOutputFrom(currency);
+
     currency.multiplier = originalMultiplier * this.multiplier;
-    game.energy.increasePassiveIncrement((currency.getTotalOutput() * currency.multiplier) - (currency.getTotalOutput() * originalMultiplier));
+    double adjustedTotalValue = getCompleteOutputFrom(currency);
+
+    game.energy.increasePassiveIncrement(adjustedTotalValue - originalTotalValue);
     return new EnergyUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 
@@ -165,8 +168,12 @@ class FollowerUpgrade extends Upgrade {
   FollowerUpgrade purchase(MyGame game, {CurrencyModel currency}) {
     game.energy.amount -= this.cost;
     double originalMultiplier = currency.multiplier;
+    double originalTotalValue = getCompleteOutputFrom(currency);
+
     currency.multiplier = originalMultiplier * this.multiplier;
-    game.followers.increasePassiveIncrement((currency.getTotalOutput() * currency.multiplier) - (currency.getTotalOutput() * originalMultiplier));
+    double adjustedTotalValue = getCompleteOutputFrom(currency);
+
+    game.followers.increasePassiveIncrement(adjustedTotalValue - originalTotalValue);
     return new FollowerUpgrade(this.cost*5, this.amount+1, this.multiplier*1.1);
   }
 

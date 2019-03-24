@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../game/game.dart';
 import '../purchase/purchase_logic.dart';
+import 'pie_chart.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class SettingsPage extends StatefulWidget {
   final MyGame game;
@@ -14,6 +16,7 @@ class SettingsPage extends StatefulWidget {
 class SettingsPageState extends State<SettingsPage> {
   final MyGame game;
   bool isAudioPlaying = true;
+
   SettingsPageState(this.game);
 
   void handleAudioToggle() {
@@ -62,12 +65,24 @@ class SettingsPageState extends State<SettingsPage> {
     if (choice.index == 1) {
       return _settingsWidget();
     } else {
-      return _statsWidget();
+      return new Column(children: <Widget>[
+        Padding(padding: EdgeInsets.only(top: 16.0),
+            child: AutoSizeText("Follower Output", 
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                maxLines: 2,
+            )
+        ),
+        _statsWidget()
+      ]);
     }
   }
 
   Widget _statsWidget() {
-    return Container(child: Text("STATS"));
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.6,
+      child: PieOutsideLabelChart.withFollowerData(this.game),
+    );
   }
 
   Widget _settingsWidget() {

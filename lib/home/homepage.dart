@@ -224,7 +224,7 @@ class HomePageState extends State<HomePage> {
               GestureDetector(
                 child: FloatingActionButton(
                     child: Icon(
-                      Icons.attach_money,
+                      Icons.trending_up,
                       color: Colors.white,
                     ),
                     backgroundColor: Colors.indigoAccent,

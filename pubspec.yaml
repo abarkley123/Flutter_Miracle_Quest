@@ -26,7 +26,10 @@ dependencies:
   flame: ^0.10.2
   shared_preferences: ^0.5.1
   flutter_swiper: ^1.1.5
-
+  charts_common: ^0.6.0 
+  charts_flutter: ^0.6.0 
+  auto_size_text: ^1.1.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -21,14 +21,26 @@ class CurrencyModel {
   double _baseProd;
   double _startingProd;
   double _multiplier;
-  final String title;
-  final String description;
+  String title;
+  String description;
 
   CurrencyModel(
       this._cost, this._amount, this._baseProd, this.title, this.description) {
     this._startingCost = this._cost;
     this._startingProd = this._baseProd;
     this._multiplier = 1.0;
+  }
+
+//essentially a copy constructor - limited by dart's inability to overload constructors
+  void copy(CurrencyModel model) {
+    this._cost = model.cost;
+    this._startingProd = model.startingProd;
+    this._baseProd = model.baseProd;
+    this._startingCost = model.startingCost;
+    this._amount = model.amount;
+    this._multiplier = model.multiplier;
+    this.title = model.title;
+    this.description = model.description;
   }
 
   void reset() {
@@ -87,6 +99,25 @@ class CurrencyModel {
       return this._startingProd * (pow(1.05, this.amount)) * this._multiplier;
     }
   }
+
+}
+
+double getCompleteOutputFrom(final CurrencyModel currency) {
+  CurrencyModel target = copyCurrency(currency);
+  double totalOutput = 0;
+
+  for (int i = target.amount; i > 0; i--) {
+    totalOutput += target.getTotalOutput();
+    target.amount = target.amount - 1;
+  }
+
+  return totalOutput;
+}
+
+CurrencyModel copyCurrency(final CurrencyModel currency) {
+  CurrencyModel copyCurrency = new CurrencyModel(0, 0, 0, "", "");
+  copyCurrency.copy(currency);
+  return copyCurrency;
 }
 
 class UpgradeDescription {

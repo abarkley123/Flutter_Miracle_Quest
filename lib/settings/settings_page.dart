@@ -67,9 +67,8 @@ class SettingsPageState extends State<SettingsPage> {
     } else {
       return new Column(children: <Widget>[
         Padding(padding: EdgeInsets.only(top: 16.0),
-            child: AutoSizeText("Follower Output", 
+            child: Text("Follower Output", 
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                maxLines: 2,
             )
         ),
         _statsWidget()

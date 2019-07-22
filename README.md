@@ -3,7 +3,7 @@
 This is an Incremental game written in Dart using the Flutter Framework, the spiritual successor to my JavaScript-based incremental game of the same name. The game follows the traditional pillars of an incremental/idle-style game, where you perform simple actions such as clicking on the screen repeatedly to earn currency. After a time, as the game plays itself, including in the player's absence, hence the moniker "idle game". 
 
 A peek of the game: 
-![alt text](https://github.com/abarkley123/Flutter_Miracle_Quest/tree/master/images/screenshot.png "Screenshot of gameplay")
+![alt text](https://github.com/abarkley123/Flutter_Miracle_Quest/blob/master/images/screenshot.png "Screenshot of gameplay")
 
 
 ## Getting Started
